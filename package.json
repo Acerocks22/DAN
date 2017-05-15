@@ -4,6 +4,7 @@
   "description": "DAN the Discord Artificial Neohuman",
   "main": "app.js",
   "scripts": {
+    "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "TabloidA",
