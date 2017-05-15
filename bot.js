@@ -1,7 +1,13 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
+var http = require('http');
+
 const prefix = "-"
+
+setInterval(function() {
+    http.get("https://dan-bot.herokuapp.com/");
+}, 300000);
 
 bot.on("ready", () => {
     console.log(`Ready to server in ${bot.channels.size} channels on ${bot.guilds.size} servers, for a total of ${bot.users.size} users.`);
