@@ -1,11 +1,6 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-var http = require("http");
-setInterval(function() {
-    http.get("http://dan-bot.herokuapp.com/");
-}, 300000);
-
 const prefix = "-";
 
 bot.on("ready", () => {
