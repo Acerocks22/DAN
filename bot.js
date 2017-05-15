@@ -30,6 +30,10 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "insult")) {
         var target = msg.mentions.users.first();
+        if (target == undefined) {
+			msg.reply("Make sure you specify a target!");
+			return;
+		}
         
         var noun = ["poo-head", "butt-face", "stinky-butt", "dummy", "fart-face", "pee-pee head", "poo-poo", "beaver", "dumb-dumb", "mc fart face"];
         var noun = noun[Math.floor(Math.random() * noun.length)];
@@ -90,7 +94,7 @@ bot.on('message', msg => {
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
-		msg.channel.send("`Full Command List`\n");
+		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-conch\n\t# Ask the magic conch shell a question.\n-spooky\n\t# Check how spooky someone is.\n-avatar\n\t# Get the avatar of someone.\n-slap\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.```");
 	}
 	if (msg.content.startsWith(prefix + "slap")) {
 		var slapnum = randomInt(0, 16);
