@@ -1,13 +1,12 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-var http = require('http');
-
-const prefix = "-"
-
+var http = require("http");
 setInterval(function() {
-    http.get("https://dan-bot.herokuapp.com/");
+    http.get("http://dan-bot.herokuapp.com/");
 }, 300000);
+
+const prefix = "-";
 
 bot.on("ready", () => {
     console.log(`Ready to server in ${bot.channels.size} channels on ${bot.guilds.size} servers, for a total of ${bot.users.size} users.`);
@@ -100,7 +99,7 @@ bot.on('message', msg => {
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
-		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-conch\n\t# Ask the magic conch shell a question.\n-spooky\n\t# Check how spooky someone is.\n-avatar\n\t# Get the avatar of someone.\n-slap\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.```");
+		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult\n\t# Insult someone.\n-conch\n\t# Ask the magic conch shell a question.\n-spooky\n\t# Check how spooky someone is.\n-avatar\n\t# Get the avatar of someone.\n-slap\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.```");
 	}
 	if (msg.content.startsWith(prefix + "slap")) {
 		var slapnum = randomInt(0, 16);
