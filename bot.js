@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 
-var http = require('http'); 
+var http = require('http');
 
 const prefix = "-"
 
