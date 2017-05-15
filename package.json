@@ -2,9 +2,9 @@
   "name": "dan",
   "version": "1.0.0",
   "description": "DAN the Discord Artificial Neohuman",
-  "main": "app.js",
+  "main": "bot.js",
   "scripts": {
-    "start": "node bot.js",
+	  "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "TabloidA",
