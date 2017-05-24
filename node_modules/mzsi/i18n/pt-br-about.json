@@ -1,0 +1,98 @@
+{
+  "1": {
+    "name": "Aquário",
+    "element": "Ar",
+    "keywords": {
+      "strength": ["espirituoso", "inteligente", "humanitária", "inventiva", "original"],
+      "weakness": ["teimoso", "sem emoção", "sarcástico", "rebelde", "indiferente"]
+    }
+  },
+  "2": {
+    "name": "Peixes",
+    "element": "Água",
+    "keywords": {
+      "strength": ["compassivo", "adaptáveis", "aceitar", "dedicado", "imaginativa"],
+      "weakness": ["mais sensível", "indeciso", "auto-piedade", "preguiçoso", "escapista"]
+    }
+  },
+  "3": {
+    "name": "Áries",
+    "element": "Fogo",
+    "keywords": {
+      "strength": ["independente", "generoso", "optimista", "entusiasmado", "corajoso"],
+      "weakness": ["temperamental", "pavio curto", "egocêntrico", "impulsivo", "impaciente"]
+    }
+  },
+  "4": {
+    "name": "Touro",
+    "element": "Terra",
+    "keywords": {
+      "strength": ["confiável", "persistente", "leal", "paciente", "generosa"],
+      "weakness": ["teimoso", "preguiça", "possessivo", "materialista", "auto-indulgente"]
+    }
+  },
+  "5": {
+    "name": "Gêmeos",
+    "element": "Ar",
+    "keywords": {
+      "strength": ["energético", "inteligente", "imaginativa", "inteligente", "adaptável"],
+      "weakness": ["superficial", "impulsivo", "inquieto", "desonesto", "indeciso"]
+    }
+  },
+  "6": {
+    "name": "Câncer",
+    "element": "Água",
+    "keywords": {
+      "strength": ["lealdade", "confiável", "cuidar", "adaptáveis", "sensível"],
+      "weakness": ["Temperamental", "pegajoso", "auto-piedade", "sensível", "egocêntrico"]
+    }
+  },
+  "7": {
+    "name": "Leão",
+    "element": "Fogo",
+    "keywords": {
+      "strength": ["confiante", "ambicioso", "generoso", "leal", "encorajando"],
+      "weakness": ["pretensioso", "dominadora", "melodramático", "teimoso", "vão"]
+    }
+  },
+  "8": {
+    "name": "Virgem",
+    "element": "Terra",
+    "keywords": {
+      "strength": ["analítica", "observador", "útil", "confiável", "precisa"],
+      "weakness": ["céticos", "exigente", "inflexível", "frio", "interferindo"]
+    }
+  },
+  "9": {
+    "name": "Libra",
+    "element": "Ar",
+    "keywords": {
+      "strength": ["diplomática", "gracioso", "pacífica", "idealista", "hospitaleiro"],
+      "weakness": ["superficial", "indeciso", "não confiável"]
+    }
+  },
+  "10": {
+    "name": "Escorpião",
+    "element": "Água",
+    "keywords": {
+      "strength": ["leal", "apaixonado", "engenhoso", "observador", "dinâmico"],
+      "weakness": ["inveja", "obsessivo", "suspeito", "manipuladora", "inflexível"]
+    }
+  },
+  "11": {
+    "name": "Sagitário",
+    "element": "Fogo",
+    "keywords": {
+      "strength": ["independência"],
+      "weakness": ["sem emoção"]
+    }
+  },
+  "12": {
+    "name": "Capricórnio",
+    "element": "Terra",
+    "keywords": {
+      "strength": ["responsável", "paciente", "ambicioso", "engenhoso", "leal"],
+      "weakness": ["ditatorial", "inibida", "vaidoso", "desconfiando", "sem imaginação"]
+    }
+  }
+}

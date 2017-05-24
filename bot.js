@@ -1,7 +1,32 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
+const express = require('express');
+var app = express();
+var http = require('http');
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+var io = require('socket.io').listen(server);
+var mzsi = require('mzsi');
+
+var acronym = require("acronym");
+var path = require("path");
+var figlet = require('figlet');
+var WordPOS = require('wordpos'),
+    wordpos = new WordPOS();
+    
+var pos = require('pos');
 
 const prefix = "-";
+const port = "1337";
+var post;
+var user;
+var server;
+var message;
+
+var channel;
+var adjectives = [];
+var nouns = [];
+var verbs = [];
 
 bot.on("ready", () => {
     console.log(`Ready to server in ${bot.channels.size} channels on ${bot.guilds.size} servers, for a total of ${bot.users.size} users.`);
@@ -9,7 +34,51 @@ bot.on("ready", () => {
 });
 
 bot.on('message', msg => {
+	//==CHATBOT CODE STARTS HERE==
+	/*channel = msg.channel;
+	if (!msg.content.startsWith("http")) {
+		var words = new pos.Lexer().lex(msg.content);
+		var tags = new pos.Tagger()
+		  .tag(words)
+		  .map(function(tag){return tag[0] + '/' + tag[1];})
+		  .join(' ');
+		  
+		var chunker = require('pos-chunker');
+		var places = chunker.chunk(tags, '[{ tag: NNP }]');
+		adjectives.push(chunker.chunk(tags, '[{ tag: JJ }]'));
+		console.log(places);
+		
+		wordpos.getAdjectives(msg.content, function(result){
+			for (var i = 0; i < result.length; i++) {
+				adjectives.push(result[i]);
+			}
+		});
+		wordpos.getNouns(msg.content, function(result){
+			for (var i = 0; i < result.length; i++) {
+				nouns.push(result[i]);
+			}
+		});
+		wordpos.getVerbs(msg.content, function(result){
+			for (var i = 0; i < result.length; i++) {
+				verbs.push(result[i]);
+			}
+		});
+	}
+	
+	if (msg.isMentioned(bot.user)) {
+		noun = nouns[Math.floor(Math.random() * nouns.length)];
+		adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+		msg.reply("I am " + noun + " " + adjective);
+	}*/
+	//==CHATBOT CODE ENDS HERE==
+	
 	if (msg.author.bot) return;
+	
+	if (msg.content.includes("@everyone")) {
+		msg.delete();
+		msg.reply("Don't ping everyone >:(");
+		return;
+	}
 	
 	if (msg.content.startsWith(prefix + "ping")) {
         msg.channel.send("Hello! :smile:");
@@ -53,7 +122,7 @@ bot.on('message', msg => {
 		} else {
 			target = msg.mentions.users.first() + " has";
 		}
-		var num = randomInt(0, 11);
+		var num = randomInt(1, 10);
 		var message;
 		
 		if (num == 1) {
@@ -94,10 +163,10 @@ bot.on('message', msg => {
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
-		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult\n\t# Insult someone.\n-conch\n\t# Ask the magic conch shell a question.\n-spooky\n\t# Check how spooky someone is.\n-avatar\n\t# Get the avatar of someone.\n-slap\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.```");
+		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.```");
 	}
 	if (msg.content.startsWith(prefix + "slap")) {
-		var slapnum = randomInt(0, 16);
+		var slapnum = randomInt(1, 16);
 		var target = msg.mentions.users.first();
 		if (target == undefined) {
 			msg.reply("You have to specify a target!");
@@ -108,6 +177,194 @@ bot.on('message', msg => {
 		}
 		msg.channel.send(`:clap: | ${msg.author} slapped ${target}!\n`, {files: ["slap/slap" + slapnum + ".gif"]});
 	}
+	if (msg.content.startsWith(prefix + "acronym")) {
+		var args = msg.content.split(' ');
+		if(args[1] == undefined) {
+			msg.reply("Make sure you specify a word/name!");
+		}
+		if(args.length > 2) {
+			msg.reply("Please only specify one word.");
+			return;
+		}
+		
+		msg.channel.send(args[1] + " = **" + acronym(args[1]) + "**");
+	}
+	if (msg.content.startsWith(prefix + "duel")) {
+		var target = msg.mentions.users.first();
+		var winner = randomInt(1,3);
+		var loser;
+		
+		if(target == undefined) {
+			msg.reply("Make sure you specify a target!");
+		}
+		
+		var battlemsg = [
+			"<user1> grabbed a sword and rushed past <user2>, making a clean cut across their neck, and leaving them to bleed out on the ground.",
+			"<user1> stuck their hand down <user2>'s throat, wrapped their palm around their spine, and tugged it out through their mouth.",
+			"Just when <user2> thought they were safe, <user1> came up behind them and stabbed them in the back 47 times.",
+			"<user1> sneaks up from behind, covers <user2>'s mouth and shanks them with a dagger to the throat.",
+			"<user1> grabs <user2> by the back of the neck and tightly pushes their head against a belt sander, slowly exposing the bone underneath their skin.",
+			"<user1> charges <user2> with no hesitation. the first strike severs both legs, disembowels their abdomen, then begins to shove the chainsaw down <user2>'s throat.",
+			"<user1> sprints to <user2>, severing their legs with an ax blow straight above the kneecaps and they fall into the bloodied blade.",
+			"<user1> wraps their hands arounds <user2>'s head, pressing their thumbs into <user2>'s eye sockets, letting the blood stream down their cheeks.",
+			"<user1> knew they wouldn't stand a chance, so they hung themselves before the fight could begin.",
+			"<user2> got caught in an explosion at an Ariana Grande concert.",
+			"<user2> got lost on their way to the duel and ended up on a cultist camp, getting sacrificed to the \"Dark Lord\".",
+			"<user1> started running. <user2> was close behind, wildly swinging an axe. <user1> tripped on a rock and tumbled to the ground, accepting their fate as an axe embedded itself in their chest.",
+			"<user1> was too busy watching TV to notice <user2> climbing through the window, brandishing a 9MM Glock 29, aimed right at <user1>'s head.",
+			"<user2> tested the limits of the human body by wrapping both hands around <user1>'s neck, and violently twisting it to one side, snapping it like a twig."
+		];
+		
+		battlemsg = battlemsg[Math.floor(Math.random() * battlemsg.length)];
+		
+		
+		if (winner == 1) {
+			loser = 2;
+			battlemsg = battlemsg.replace(/<user1>/g, msg.author);
+			battlemsg = battlemsg.replace(/<user2>/g, target);
+		} else if (winner == 2) {
+			loser = 1;
+			battlemsg = battlemsg.replace(/<user2>/g, msg.author);
+			battlemsg = battlemsg.replace(/<user1>/g, target);
+		}
+		
+		msg.channel.send(target + ", " + msg.author + " has challenged you to a duel! Accept the duel with `" + prefix + "accept`.");
+		
+		const collector = msg.channel.createCollector(
+			m => m.content.startsWith(prefix + "accept"),
+			{ maxMatches: 1, time: 30000 }
+		);
+		collector.on('collect', (msg, collected) => {
+			if (msg.author != target) {
+				return;
+			}
+			msg.channel.send(battlemsg);
+		});
+		collector.on('end', collected => {
+			if (!collected) {
+				msg.channel.send(target + " wimped out and didn't respond!");
+			}
+		});
+	}
+	if (msg.content.startsWith(prefix + "ascii")) {
+		var line = msg.content.split(' ');
+		line = line[0] + " ";
+		var word = msg.content.slice(msg.content.indexOf(prefix + 'ascii') + line.length);
+		
+		figlet(word, function(err, data) {
+			if (err) {
+				console.log('Something went wrong...');
+				console.dir(err);
+				return;
+			}
+			if (data.length > 443) {
+				msg.channel.send("String given is too long!");
+				return;
+			}
+			msg.channel.send("```"+data+"```");
+		});
+	}
+	if (msg.content.startsWith(prefix + "horses")) {
+		var lane1 = ': =========:horse_racing: : Jim';
+		var lane2 = ': =========:horse_racing: : Brad';
+		var lane3 = ': =========:horse_racing: : Kevin';
+		var lane4 = ': =========:horse_racing: : Carl';
+		var place1 = 12;
+		var place2 = 12;
+		var place3 = 12;
+		var place4 = 12;
+		var move1;
+		var move2;
+		var move3;
+		var move4;
+		var msgid = 12;
+		var move;
+
+		function replaceIndex(string, at, repl) {
+		   return string.replace(/\S/g, function(match, i) {
+				if( i === at ) return repl;
+
+				return match;
+			});
+		}
+
+		msg.channel.send("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4).then((sent) => {msgid = sent.id; moveHorses()});
+		
+		function moveHorses() {
+			move = setInterval(function() {
+				move1 = randomInt(1,4);
+				move2 = randomInt(1,4);
+				move3 = randomInt(1,4);
+				move4 = randomInt(2,5);
+				if (move1 == 3) {
+					lane1 = lane1.replace(/:horse_racing:/g, '=');
+					lane1 = replaceIndex(lane1, place1 - 1, ':horse_racing:');
+					place1 -= 1;
+				}
+				if (move2 == 2) {
+					lane2 = lane2.replace(/:horse_racing:/g, '=');
+					lane2 = replaceIndex(lane2, place2 - 1, ':horse_racing:');
+					place2 -= 1;
+				}
+				if (move3 == 1) {
+					lane3 = lane3.replace(/:horse_racing:/g, '=');
+					lane3 = replaceIndex(lane3, place3 - 1, ':horse_racing:');
+					place3 -= 1;
+				}
+				if (move4 == 4) {
+					lane4 = lane4.replace(/:horse_racing:/g, '=');
+					lane4 = replaceIndex(lane4, place4 - 1, ':horse_racing:');
+					place4 -= 1;
+				}
+				
+				msg.channel.fetchMessage(msgid).then(message => {message.edit("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4);});
+				if (place1 == 2) {
+					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nJim won!");});
+					clearInterval(move);
+				} else if (place2 == 2) {
+					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nBrad won!");});
+					clearInterval(move);
+				} else if (place3 == 2) {
+					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nKevin won!");});
+					clearInterval(move);
+				} else if (place4 == 2) {
+					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nCarl won!");});
+					clearInterval(move);
+				}
+			}, 1000);
+		}
+	}
+	if (msg.content.startsWith(prefix + "zodiac")) {
+		var args = msg.content.split(' ');
+		var month = Number(args[1]);
+		var day = Number(args[2]);
+		var sign = mzsi(month, day);
+		var strength = "**Strengths:** ";
+		var strengths = sign.about.keywords.strength;
+		var weaknesses = sign.about.keywords.weakness;
+		var weakness = "**Weaknesses:** ";
+		
+		for (var s = 0; s < strengths.length; s++) {
+			if (strengths.length == 1) {
+				strength += strengths[s] + ".";
+			} else if (s < strengths.length - 1) {
+				strength += strengths[s] + ", ";
+			} else {
+				strength += "and " + strengths[s] + ".";
+			}
+		}
+		for (var w = 0; w < weaknesses.length; w++) {
+			if (weaknesses.length == 1) {
+				weakness += weaknesses[w] + ".";
+			} else if (w < weaknesses.length - 1) {
+				weakness += weaknesses[w] + ", ";
+			} else {
+				weakness += "and " + weaknesses[w] + ".";
+			}
+		}
+		
+		msg.channel.send("**Date:** "+month+"/"+day+"\n**Zodiac Name:** "+sign.name+"\n**Symbol:** "+sign.symbol+"\n"+strength+"\n"+weakness);
+	}
 });
 
 function randomInt(low, high) {
@@ -115,3 +372,48 @@ function randomInt(low, high) {
 };
 
 bot.login('MzEzMzAzNjU1NjU2ODQ5NDEw.C_nr9w.VCjneeveovhq8OvTTqcHEraMv3Q');
+
+/*app.get('/', function (req, res) {
+	res.sendFile(path.join(__dirname + '/index.html'));
+});*/
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+server.listen(port, function () {
+	console.log('DANbot is listening on port ' + port + '!')
+});
+
+//io.sockets.emit('trades', {accept: totalTradesAccepted, deny: totalTradesDenied});
+
+/*if (msg.content.startsWith(prefix + "social")) {
+		message = msg;
+		user = msg.author.username;
+		server = msg.guild.name;
+		var args = msg.content.split(" ");
+		var args = args[0] + "  ";
+		post = msg.content.slice(msg.content.indexOf('.giraffe') + args.length);
+		if (!post) {
+			msg.channel.send("Send a valid message.");
+			return;
+		} else if (post.toLowerCase().includes("fag") || post.toLowerCase().includes("fuck you") || post.toLowerCase().includes("cunt") || post.toLowerCase().includes("kys") || post.toLowerCase().includes("kill yourself")) {
+			msg.channel.send("Be nice! You're talking on a public chat.");
+			return;
+		} 
+		
+		msg.channel.send("Sending a message to everyone...\n`" + post + "`").then((sent) => {setTimeout(() =>{sent.edit("Sent message:\n`" + post + "`")},3000)});
+		setTimeout(function() {
+			var postchannel;
+			var postchannel2;
+			
+			for (const guild of bot.guilds.values()) {
+				if (guild.channels.find("name", "bot_commands")) {
+					postchannel = guild.channels.find("name", "bot_commands");
+					postchannel.send("```\nMSG from " + user + " in the server \"" + server + "\":\n\"" + post  + "\"\n```");
+				} else if (guild.channels.find("name", "bot_spam")) {
+					postchannel = guild.channels.find("name", "bot_spam");
+					postchannel.send("```\nMSG from " + user + " in the server \"" + server + "\":\n\"" + post  + "\"\n```");
+				}
+			}
+		}, 3000);
+	}
+	*/

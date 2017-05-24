@@ -1,0 +1,98 @@
+{
+  "1": {
+    "name": "Aquarius",
+    "element": "Air",
+    "keywords": {
+      "strength": ["witty", "clever", "humanitarian", "inventive", "original"],
+      "weakness": ["stubborn", "unemotional", "sarcastic", "rebellious", "aloof"]
+    }
+  },
+  "2": {
+    "name": "Pisces",
+    "element": "Water",
+    "keywords": {
+      "strength": ["compassionate", "adaptable", "accepting", "devoted", "imaginative"],
+      "weakness": ["oversensitive", "indecisive", "self-pitying", "lazy", "escapist"]
+    }
+  },
+  "3": {
+    "name": "Aries",
+    "element": "Fire",
+    "keywords": {
+      "strength": ["independent", "generous", "optimistic", "enthusiastic", "courageous"],
+      "weakness": ["moody", "short tempered", "self-involved", "impulsive", "impatient"]
+    }
+  },
+  "4": {
+    "name": "Taurus",
+    "element": "Earth",
+    "keywords": {
+      "strength": ["dependable", "persistent", "loyal", "patient", "generous"],
+      "weakness": ["stubborn", "laziness", "possessive", "materialistic", "self-indulging"]
+    }
+  },
+  "5": {
+    "name": "Gemini",
+    "element": "Air",
+    "keywords": {
+      "strength": ["energetic", "clever", "imaginative", "witty", "adaptable"],
+      "weakness": ["superficial", "impulsive", "restless", "devious", "indecisive"]
+    }
+  },
+  "6": {
+    "name": "Cancer",
+    "element": "Water",
+    "keywords": {
+      "strength": ["loyalty", "dependable", "caring", "adaptable", "responsive"],
+      "weakness": ["moody", "clingy", "self-pitying", "oversensitive", "self-absorbed"]
+    }
+  },
+  "7": {
+    "name": "Leo",
+    "element": "Fire",
+    "keywords": {
+      "strength": ["confident", "ambitious", "generous", "loyal", "encouraging"],
+      "weakness": ["pretentious", "domineering", "melodramatic", "stubborn", "vain"]
+    }
+  },
+  "8": {
+    "name": "Virgo",
+    "element": "Earth",
+    "keywords": {
+      "strength": ["analytical", "observant", "helpful", "reliable", "precise"],
+      "weakness": ["skeptical", "fussy", "inflexible", "cold", "interfering"]
+    }
+  },
+  "9": {
+    "name": "Libra",
+    "element": "Air",
+    "keywords": {
+      "strength": ["diplomatic", "graceful", "peaceful", "idealistic", "hospitable"],
+      "weakness": ["superficial", "indecisive", "unreliable"]
+    }
+  },
+  "10": {
+    "name": "Scorpio",
+    "element": "Water",
+    "keywords": {
+      "strength": ["loyal", "passionate", "resourceful", "observant", "dynamic"],
+      "weakness": ["jealous", "obsessive", "suspicious", "manipulative", "unyielding"]
+    }
+  },
+  "11": {
+    "name": "Sagittarius",
+    "element": "Fire",
+    "keywords": {
+      "strength": ["independence"],
+      "weakness": ["unemotional"]
+    }
+  },
+  "12": {
+    "name": "Capricorn",
+    "element": "Earth",
+    "keywords": {
+      "strength": ["responsible", "patient", "ambitious", "resourceful", "loyal"],
+      "weakness": ["dictatorial", "inhibited", "conceited", "distrusting", "unimaginative"]
+    }
+  }
+}
