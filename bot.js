@@ -16,7 +16,7 @@ var WordPOS = require('wordpos'),
 var pos = require('pos');
 
 const prefix = "-";
-const port = "1337";
+const port = "8080";
 var post;
 var user;
 var server;
@@ -501,8 +501,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.server.listen(process.env.PORT || port);
-console.log('DANbot is listening on port ' + port + '!')
+app.server.listen(process.env.PORT || 4000);
+console.log('DANbot is listening on port ' + app.server.address().port + '!')
 
 //io.sockets.emit('trades', {accept: totalTradesAccepted, deny: totalTradesDenied});
 
