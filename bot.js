@@ -3,9 +3,7 @@ const bot = new Discord.Client();
 const express = require('express');
 var app = express();
 var http = require('http');
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var io = require('socket.io').listen(server);
+app.server = http.createServer(app);
 var mzsi = require('mzsi');
 var ow = require('overwatch-js');
 
@@ -500,9 +498,11 @@ bot.login('MzEzMzAzNjU1NjU2ODQ5NDEw.C_nr9w.VCjneeveovhq8OvTTqcHEraMv3Q');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-server.listen(port, function () {
-	console.log('DANbot is listening on port ' + port + '!')
-});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.server.listen(process.env.PORT || port);
+console.log('DANbot is listening on port ' + port + '!')
 
 //io.sockets.emit('trades', {accept: totalTradesAccepted, deny: totalTradesDenied});
 

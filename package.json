@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "acronym": "^1.0.0",
+    "body-parser": "^1.17.2",
     "discord.js": "^11.1.0",
     "express": "^4.15.3",
     "figlet": "^1.2.0",
