@@ -6,6 +6,7 @@ var http = require('http');
 app.server = http.createServer(app);
 var mzsi = require('mzsi');
 var ow = require('overwatch-js');
+var bodyParser = require('body-parser');
 
 var acronym = require("acronym");
 var path = require("path");
