@@ -34,7 +34,7 @@ bot.on("ready", () => {
     bot.user.setGame("with friends | -help");
 });
 
-bot.on('message', msg => {
+bot.on('message', msg => { 
 	//==CHATBOT CODE STARTS HERE==
 	/*channel = msg.channel;
 	if (!msg.content.startsWith("http")) {
