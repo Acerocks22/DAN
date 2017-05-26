@@ -7,6 +7,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var io = require('socket.io').listen(server);
 var mzsi = require('mzsi');
+var ow = require('overwatch-js');
 
 var acronym = require("acronym");
 var path = require("path");
@@ -23,10 +24,10 @@ var user;
 var server;
 var message;
 
-var channel;
+/*var channel;
 var adjectives = [];
 var nouns = [];
-var verbs = [];
+var verbs = [];*/
 
 bot.on("ready", () => {
     console.log(`Ready to server in ${bot.channels.size} channels on ${bot.guilds.size} servers, for a total of ${bot.users.size} users.`);
@@ -107,10 +108,10 @@ bot.on('message', msg => {
         var noun = ["poo-head", "butt-face", "stinky-butt", "dummy", "fart-face", "pee-pee head", "poo-poo", "beaver", "dumb-dumb", "mc fart face"];
         var noun = noun[Math.floor(Math.random() * noun.length)];
         
-        var adj = ["stinky", "stupid", "silly", "weird", "smelly", "annoying", "dumb", "spooky", "poopy"];
+        var adj = ["a stinky", "a stupid", "a silly", "a weird", "a smelly", "an annoying", "a dumb", "a spooky", "a poopy"];
         var adj = adj[Math.floor(Math.random() * adj.length)];
         
-        var phrase = [`You're a ${adj} ${noun}. >:(`, `Wowow, what a ${adj} ${noun}.`, `You are nothing but a ${adj} ${noun}.`];
+        var phrase = [`You're ${adj} ${noun}. >:(`, `Wowow, what ${adj} ${noun}.`, `You are nothing but ${adj} ${noun}.`];
         var phrase = phrase[Math.floor(Math.random() * phrase.length)];
         
         msg.channel.send(`${target}, ${phrase}`);
@@ -163,7 +164,7 @@ bot.on('message', msg => {
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
-		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.```");
+		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.\n-ow <battle tag>\n\t# Get info about your Overwatch profile.\n-ftoc <number>\n\t# Convert Farenheit to Celsius\n-ctof <number>\n\t# Convert Celsius to Farenheit\n```");
 	}
 	if (msg.content.startsWith(prefix + "slap")) {
 		var slapnum = randomInt(1, 16);
@@ -336,6 +337,11 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "zodiac")) {
 		var args = msg.content.split(' ');
+		if (msg.content.includes("/") || msg.content.includes(" ")) {
+			msg.channel.send("Make sure you follow the correct syntax.");
+			return;
+		}
+		
 		var month = Number(args[1]);
 		var day = Number(args[2]);
 		var sign = mzsi(month, day);
@@ -364,6 +370,121 @@ bot.on('message', msg => {
 		}
 		
 		msg.channel.send("**Date:** "+month+"/"+day+"\n**Zodiac Name:** "+sign.name+"\n**Symbol:** "+sign.symbol+"\n"+strength+"\n"+weakness);
+	}
+	if(msg.content.startsWith(prefix + 'ow')) {
+		var args = msg.content.split(' ');
+		var tag = args[1].replace('#', '-');
+		//// Search for a player ( you must have the exact username, if not Blizzard api will return a not found status) 
+		owjs
+			.getOverall('pc', 'us', tag)
+			.then((data) => {
+				var rank = data['profile'].rank;
+				var tier = data['profile'].tier;
+				var level = data['profile'].level;
+				var compElims = data['competitive']['global'].eliminations_average;
+				var compDeaths = data['competitive']['global'].deaths_average;
+				var compDamage = data['competitive']['global'].damage_done;
+				var compKillstreak = data['competitive']['global'].kill_streak_best;
+				
+				if (compElims == undefined) {
+					compElims = "N/A";
+				}
+				if (compDeaths == undefined) {
+					compDeaths = "N/A";
+				}
+				if (compDamage == undefined) {
+					compDamage = "N/A";
+				}
+				if (compKillstreak == undefined) {
+					compKillstreak = "N/A";
+				}
+				//console.log(data);
+				if (isNaN(rank)) {
+					rank = "N/A";
+				}
+				if(level.length == 1) {
+					level = "0" + level.toString();
+				}
+				if (tier == 0) {
+					tier = "";
+				}
+				msg.channel.send("", {embed: {
+					color: 1352973,
+					author: {
+						name: 'Overwatch stats for ' + args[1]
+					},
+					description: '--------------\n',
+					fields: [
+						{
+						name: 'Level: ',
+						value: tier.toString() + level.toString()
+						},
+						{
+						name: 'Rank: ',
+						value: rank
+						},
+						{
+						name: 'Quickplay Stats: ',
+						inline: true,
+						value: '**Elimination Average:** ' + data['quickplay']['global'].eliminations_average.toString() + '\n**Death Average:** ' + data['quickplay']['global'].deaths_average.toString() + '\n**Damage Done:** ' + data['quickplay']['global'].damage_done.toString() + '\n**Best Killstreak:** ' + data['quickplay']['global'].kill_streak_best.toString()
+						},
+						{
+						name: 'Competitive Stats: ',
+						inline: true,
+						value: '**Elimination Average:** ' + compElims.toString() + '\n**Death Average:** ' + compDeaths.toString() + '\n**Damage Done:** ' + compDamage.toString() + '\n**Best Killstreak:** ' + compKillstreak.toString()
+						},
+						{
+						name: 'Medal Stats: ',
+						value: '**Total Medals:** ' + data['quickplay']['global'].medals.toString() + '\n**Gold Medals:** ' + data['quickplay']['global'].medals_gold.toString() + '\n**Silver Medals:** ' + data['quickplay']['global'].medals_silver.toString() + '\n**Bronze Medals:** ' + data['quickplay']['global'].medals_bronze.toString()
+						}
+					],
+					thumbnail: {
+						url: data['profile'].avatar
+					}
+				}});
+			})
+			.catch(function(e) {
+				//if (e.toString().includes(''))
+				console.log(e);
+			});
+	}
+	if (msg.content.startsWith(prefix + "puzzle")) {
+		var puzzle = '';
+		var puzzles = "Hello World";
+		var num = randomInt(1,10);
+		var charcode;
+		
+		var args = puzzles.split('');
+		
+		for (var i = 0; i < args.length; i++) {
+			charcode = (puzzles[i].charCodeAt() + num)
+			if (args[i] == " ") {
+				puzzle += " ";
+			} else {
+				puzzle += String.fromCharCode(charcode);
+			}
+		}
+		msg.content.send(puzzlem );
+	}
+	if (msg.content.startsWith(prefix + "ftoc")) {
+		var args = msg.content.split(' ');
+		
+		var Faren = Number(args[1]);
+		
+		var Celc = (Faren - 32) / 1.8;
+		var Celc =  Math.floor(Celc);
+		
+		msg.channel.send("Farenheit to Celsius: \n`" + Faren +"F°` = `" + Celc + "C°`");
+	}
+	if (msg.content.startsWith(prefix + "ctof")) {
+		var args = msg.content.split(' ');
+		
+		var Celc = Number(args[1]);
+		
+		var Faren = (Celc * 1.8) + 32;
+		var Faren = Math.floor(Faren);
+		
+		msg.channel.send("Celsius to Farenheit: \n`" + Celc + "C°` = `" + Faren +"F°`");
 	}
 });
 
