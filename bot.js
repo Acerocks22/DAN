@@ -160,6 +160,7 @@ bot.on('message', msg => {
 		}
 	}
 	if (msg.content.startsWith(prefix + "add")) {
+		msg.reply('Sent you a DM.');
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
@@ -464,6 +465,10 @@ bot.on('message', msg => {
 			}
 		}
 		msg.content.send(puzzlem );
+	}
+	if (msg.content.startsWith(prefix + "join")) {
+		msg.reply('Sent you a DM.');
+		msg.author.send('Have any questions about the bot or just want to get info on updates before they\'re released?\n**Join the official server:**\ndiscord.gg/dEMZZMe');
 	}
 	if (msg.content.startsWith(prefix + "ftoc")) {
 		var args = msg.content.split(' ');
