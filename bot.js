@@ -7,6 +7,7 @@ app.server = http.createServer(app);
 var mzsi = require('mzsi');
 var ow = require('overwatch-js');
 var bodyParser = require('body-parser');
+var casual = require('casual');
 
 var acronym = require("acronym");
 var path = require("path");
@@ -16,7 +17,8 @@ var WordPOS = require('wordpos'),
     
 var pos = require('pos');
 
-const prefix = "-";
+const prefix = "+";
+const beta = "beta ";
 const port = "8080";
 var post;
 var user;
@@ -164,7 +166,7 @@ bot.on('message', msg => {
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
-		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.\n-ow <battle tag>\n\t# Get info about your Overwatch profile.\n-ftoc <number>\n\t# Convert Farenheit to Celsius\n-ctof <number>\n\t# Convert Celsius to Farenheit\n```");
+		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.\n-ow <battle tag>\n\t# Get info about your Overwatch profile.\n-ftoc <number>\n\t# Convert Farenheit to Celsius\n-ctof <number>\n\t# Convert Celsius to Farenheit\n-join\n\t# Join the DAN's Support Server```");
 	}
 	if (msg.content.startsWith(prefix + "slap")) {
 		var slapnum = randomInt(1, 16);
@@ -320,16 +322,16 @@ bot.on('message', msg => {
 				
 				msg.channel.fetchMessage(msgid).then(message => {message.edit("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4);});
 				if (place1 == 2) {
-					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nJim won!");});
+					msg.channel.send(":tada: **Jim wins the race!** :tada:");
 					clearInterval(move);
 				} else if (place2 == 2) {
-					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nBrad won!");});
+					msg.channel.send(":tada: **Brad wins the race!** :tada:");
 					clearInterval(move);
 				} else if (place3 == 2) {
-					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nKevin won!");});
+					msg.channel.send(":tada: **Kevin wins the race!** :tada:");
 					clearInterval(move);
 				} else if (place4 == 2) {
-					msg.channel.fetchMessage(msgid).then(message => {message.edit(message += "\nCarl won!");});
+					msg.channel.send(":tada: **Carl wins the race!** :tada:");
 					clearInterval(move);
 				}
 			}, 1000);
@@ -448,23 +450,34 @@ bot.on('message', msg => {
 				console.log(e);
 			});
 	}
-	if (msg.content.startsWith(prefix + "puzzle")) {
+	if (msg.content.startsWith(beta + "puzzle")) {
 		var puzzle = '';
-		var puzzles = "Hello World";
+		var puzzles = casual.catch_phrase;
+		console.log(puzzles);
 		var num = randomInt(1,10);
 		var charcode;
 		
 		var args = puzzles.split('');
 		
 		for (var i = 0; i < args.length; i++) {
-			charcode = (puzzles[i].charCodeAt() + num)
+			charcode = (puzzles[i].charCodeAt() + num);
 			if (args[i] == " ") {
 				puzzle += " ";
 			} else {
 				puzzle += String.fromCharCode(charcode);
 			}
 		}
-		msg.content.send(puzzlem );
+		msg.channel.send(puzzle);
+		
+		const collector = msg.channel.createCollector(
+			m => m.content.startsWith(puzzles),
+			{ maxMatches: 1, time: 3000000 }
+		);
+		collector.on('collect', (msg, collected) => {
+			msg.channel.send("Correct!");
+		});
+		collector.on('end', collected => {
+		});
 	}
 	if (msg.content.startsWith(prefix + "join")) {
 		msg.reply('Sent you a DM.');
