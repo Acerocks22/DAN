@@ -17,7 +17,7 @@ var WordPOS = require('wordpos'),
     
 var pos = require('pos');
 
-const prefix = "+";
+const prefix = "-";
 const beta = "beta ";
 const port = "8080";
 var post;
