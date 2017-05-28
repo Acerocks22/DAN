@@ -8,6 +8,9 @@ var mzsi = require('mzsi');
 var owjs = require('overwatch-js');
 var bodyParser = require('body-parser');
 var casual = require('casual');
+var query = require('./lib/db.js');
+var moment = require('moment');
+moment().format();
 
 var acronym = require("acronym");
 var path = require("path");
@@ -35,7 +38,10 @@ bot.on("ready", () => {
     bot.user.setGame("with friends | -help");
 });
 
-bot.on('message', msg => { 
+bot.on('message', msg => {
+	if (msg.author.bot) return;
+	
+	userId = msg.author.id;
 	//==CHATBOT CODE STARTS HERE==
 	/*channel = msg.channel;
 	if (!msg.content.startsWith("http")) {
@@ -73,6 +79,75 @@ bot.on('message', msg => {
 		msg.reply("I am " + noun + " " + adjective);
 	}*/
 	//==CHATBOT CODE ENDS HERE==
+	
+	if (msg.content.startsWith(prefix + "payday")) {
+		getTime(userId, function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+			var paydaydate = Number(result.rows[0].payday) * 1000;
+			//console.log("YAS: "+paydaydate);
+			paydaydateISO = moment(paydaydate).toISOString();
+			
+			var date = moment();
+			//console.log(date + " / "+paydaydate);
+			//var newdate = date.format("M/D/YYYY H:mm");
+			//console.log(moment(paydaydate) + "---" + paydaydate);
+			var nextdate = moment(paydaydate).add(18, 'hours');
+			//console.log(moment(nextdate));
+			
+			var difference = moment(date).diff(moment(paydaydate), 'minutes');
+			var timeuntil = moment(nextdate).diff(date, 'hours');
+			
+			//console.log("ya: "+difference);
+			
+			if (difference > 1079) {
+				var curdate = Math.floor(moment() / 1000);
+				msg.channel.send(":money_mouth: :moneybag: Gave you **250** credits!");
+				setTime(userId, curdate, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				 });
+				 addMoney(userId, 250, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				 });
+				return;
+			} else if (difference <= 1079) {
+				msg.channel.send(":moneybag: :alarm_clock:You have **"+timeuntil+"** hour(s) before your next payday!");
+				return;
+			}
+			
+			/*setTime(userId, curdate, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				givenPoints.clear();
+			 });*/
+			/*addMoney(userId, 250, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				givenPoints.clear();
+			 });*/
+		});
+	}
+	
+	if (msg.guild.name != "Discord Bots") {
+		addUser(userId, 0, function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+		});
+		
+		/*getUser(userId, function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+		});*/
+	}
 	
 	if (msg.author.bot) return;
 	
@@ -199,6 +274,8 @@ bot.on('message', msg => {
 		
 		if(target == undefined) {
 			msg.reply("Make sure you specify a target!");
+			return;
+			
 		}
 		
 		var battlemsg = [
@@ -244,8 +321,10 @@ bot.on('message', msg => {
 			msg.channel.send(battlemsg);
 		});
 		collector.on('end', collected => {
-			if (!collected) {
+			console.log(collected.length);
+			if (collected.length == undefined) {
 				msg.channel.send(target + " wimped out and didn't respond!");
+				return;
 			}
 		});
 	}
@@ -521,7 +600,68 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.server.listen(process.env.PORT || 4000);
-console.log('DANbot is listening on port ' + app.server.address().port + '!')
+console.log('DANbot is listening on port ' + app.server.address().port + '!');
+
+//====DATABASE FUNCTIONS====//
+function addUser(user, money, cb) {
+    query(`INSERT INTO bank(user_id, money) VALUES ('${user}', '${money}') ON CONFLICT (user_id) DO NOTHING`, function(err, result) {
+        if (err)
+            cb(err, null);
+        //console.log(result);
+        cb(null, result);
+    });
+}
+
+function getUser(user, cb) {
+    query(`SELECT (EXISTS(SELECT * FROM bank WHERE user_id = '${user}'))::int`, function(err, result) {
+        if (err) {
+            cb(err, null);
+        }
+        cb(null, result);
+    });
+}
+
+function getTime(user, cb) {
+    query(`SELECT payday FROM bank WHERE user_id = '${user}'`, function(err, result) {
+        if (err) {
+            cb(err, null);
+        }
+        cb(null, result);
+    });
+}
+
+function setTime(user, date, cb) {
+    query(`UPDATE bank SET payday = '${date}' WHERE user_id = '${user}'`, function(err, result) {
+        if (err)
+            cb(err, null);
+        //console.log(result);
+        cb(null, result);
+
+    });
+}
+
+function addMoney(user, mAmount, cb) {
+    query(`UPDATE bank SET money = money + '${mAmount}' WHERE user_id = '${user}'`, function(err, result) {
+        if (err)
+            cb(err, null);
+        //console.log(result);
+        cb(null, result);
+
+    });
+}
+
+function subMoney(user, mAmount, cb) {
+    query(`UPDATE bank SET money = money + '${mAmount}' WHERE user_id = '${user}'`, function(err, result) {
+        if (err)
+            cb(err, null);
+        //console.log(result);
+        cb(null, result);
+
+    });
+}
+
+
+//====IRRELEVANT STUFF====//
 
 //io.sockets.emit('trades', {accept: totalTradesAccepted, deny: totalTradesDenied});
 
