@@ -586,6 +586,13 @@ bot.on('message', msg => {
 		var slot1 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot2 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot3 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
+		var chance = randomInt(1,5);
+		if (chance  == 2) {
+			slot1 = slot2;
+			slot3 = slot2;
+		} else if (chance == 3) {
+			slot2 = slot3;
+		}
 		var status = "LOSS";
 		var gained = "";
 		
