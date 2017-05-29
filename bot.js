@@ -103,7 +103,7 @@ bot.on('message', msg => {
 			
 			if (difference > 1079) {
 				var curdate = Math.floor(moment() / 1000);
-				msg.channel.send(":money_mouth: :moneybag: Gave you **250** coins!");
+				msg.channel.send(":money_mouth::moneybag: | Gave you **250** coins!");
 				setTime(userId, curdate, function(err, result) {
 					if (err) {
 						console.log(err);
@@ -116,7 +116,7 @@ bot.on('message', msg => {
 				 });
 				return;
 			} else if (difference <= 1079) {
-				msg.channel.send(":moneybag: :alarm_clock:You have **"+timeuntil+"** hour(s) before your next payday!");
+				msg.channel.send(":moneybag::alarm_clock: | You have **"+timeuntil+"** hour(s) before your next payday!");
 				return;
 			}
 		});
@@ -238,7 +238,8 @@ bot.on('message', msg => {
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
-		msg.channel.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.\n-ow <battle tag>\n\t# Get info about your Overwatch profile.\n-ftoc <number>\n\t# Convert Farenheit to Celsius\n-ctof <number>\n\t# Convert Celsius to Farenheit\n-join\n\t# Join the DAN's Support Server```");
+		msg.author.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.\n-ow <battle tag>\n\t# Get info about your Overwatch profile.\n-ftoc <number>\n\t# Convert Farenheit to Celsius\n-ctof <number>\n\t# Convert Celsius to Farenheit\n-join\n\t# Join the DAN's Support Server\n==Money==\n-payday\n\t# Collect your daily paycheck!\n-balance\n\t# Check your bank account balance.```");
+		msg.channel.send("The command list has been DMed to you. :)");
 	}
 	if (msg.content.startsWith(prefix + "slap")) {
 		var slapnum = randomInt(1, 16);
