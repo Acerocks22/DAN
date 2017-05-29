@@ -581,7 +581,7 @@ bot.on('message', msg => {
 		msg.channel.send("Celsius to Farenheit: \n`" + Celc + "C°` = `" + Faren +"F°`");
 	}
 	if (msg.content.startsWith(prefix + "slots")) {
-		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":crown:"];
+		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":crown:"];
 		var slot1 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot2 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot3 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
