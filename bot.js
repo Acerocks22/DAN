@@ -20,7 +20,7 @@ var WordPOS = require('wordpos'),
     
 var pos = require('pos');
 
-const prefix = "-";
+const prefix = "+";
 const beta = "beta ";
 const port = "8080";
 var post;
@@ -593,7 +593,7 @@ bot.on('message', msg => {
 			if (err) {
 				console.log(err);
 			}
-			if (Number(amount) - 20 <= 0) {
+			if (Number(amount) - 20 < 0) {
 				msg.channel.send("You don't have enough coins! Wait until your next payday to get some more. :smile:");
 			} else {
 				subMoney(userId, 20, function(err, result) {
@@ -607,7 +607,7 @@ bot.on('message', msg => {
 						}
 					});
 					status = " WIN ";
-					gained = "|═Payout: 40C═|";
+					gained = "**Payout: 40C**";
 				} else if (slot1 == ":cherries:" && slot2 == ":cherries:" && slot3 == ":cherries:") {
 					addMoney(userId, 100, function(err, result) {
 						if (err) {
@@ -615,7 +615,7 @@ bot.on('message', msg => {
 						}
 					});
 					status = " WIN ";
-					gained = "|═Payout: 100C═|";
+					gained = "**Payout: 100C**";
 				} else if (slot1 == ":lemon:" && slot2 == ":lemon:" && slot3 == ":lemon:") {
 					addMoney(userId, 75, function(err, result) {
 						if (err) {
@@ -623,7 +623,7 @@ bot.on('message', msg => {
 						}
 					});
 					status = " WIN ";
-					gained = "|═Payout: 75C═|";
+					gained = "**Payout: 75C**";
 				} else if (slot1 == ":grapes:" && slot2 == ":grapes:" && slot3 == ":grapes:") {
 					addMoney(userId, 200, function(err, result) {
 						if (err) {
@@ -631,7 +631,7 @@ bot.on('message', msg => {
 						}
 					});
 					status = " WIN ";
-					gained = "|═Payout: 200C═|";
+					gained = "**Payout: 200C**";
 				} else if (slot1 == ":crown:" && slot2 == ":crown:" && slot3 == ":crown:") {
 					addMoney(userId, 500, function(err, result) {
 						if (err) {
@@ -639,10 +639,10 @@ bot.on('message', msg => {
 						}
 					});
 					status = " WIN ";
-					gained = "|═Payout: 500C═|";
+					gained = "**Payout: 500C**";
 				}
+				msg.channel.send(`**╔═══[SLOTS]═══╗**\n\n**▻** ${slot1}  **║**  ${slot2}  **║**  ${slot3} **◅**\n\n**╚═══  [${status}] ═══╝**\n${gained}`);
 			});
-			msg.channel.send(`**╔═══[SLOTS]═══╗**\n\n**▻** ${slot1}  **║**  ${slot2}  **║**  ${slot3} **◅**\n\n**╚═══  [${status}] ═══╝**\n${gained}`);
 			}
 		});
 	}
