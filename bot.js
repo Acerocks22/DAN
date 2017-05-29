@@ -125,6 +125,7 @@ bot.on('message', msg => {
 	if (msg.content.startsWith(prefix + "balance")) {
 		var target;
 		var person;
+		var debt = "";
 		if (msg.mentions.users.first() == undefined) {
 			target = msg.author.id;
 			person = msg.author.username;
@@ -134,13 +135,16 @@ bot.on('message', msg => {
 		}
 		getMoney(target, function(err, result) {
 			if (result.rows[0] == undefined) {
-				msg.reply("That person has not opened an account yet!");
+				msg.reply(person + " has not opened an account yet!");
 				return;
 			} else {
 				var amount = result.rows[0].money;
+				if (amount < 0) {
+					debt = "**You're in debt!**";
+				}
 			}
 			
-			msg.channel.send(":bank::moneybag: | " +person+ " has **"+amount+" coins** in their account.");
+			msg.channel.send(":bank::moneybag: | " +person+ " has **"+amount+" coins** in their account.\n" + debt);
 			if (err) {
 				console.log(err);
 			}
