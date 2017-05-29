@@ -626,43 +626,43 @@ bot.on('message', msg => {
 					console.log(err);
 				}
 				if (slot1 == ":pear:" && slot2 == ":pear:" && slot3 == ":pear:") {
-					addMoney(userId, 200, function(err, result) {
+					addMoney(userId, 100, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 200C**";
+					gained = "**Payout: 100C**";
 					
 				} else if (slot1 == ":cherries:" && slot2 == ":cherries:" && slot3 == ":cherries:") {
-					addMoney(userId, 1500, function(err, result) {
+					addMoney(userId, 800, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 1500C**";
+					gained = "**Payout: 800C**";
 					
 				} else if (slot1 == ":lemon:" && slot2 == ":lemon:" && slot3 == ":lemon:") {
-					addMoney(userId, 2000, function(err, result) {
+					addMoney(userId, 1000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 2000C**";
+					gained = "**Payout: 1000C**";
 					
 				} else if (slot1 == ":grapes:" && slot2 == ":grapes:" && slot3 == ":grapes:") {
-					addMoney(userId, 600, function(err, result) {
+					addMoney(userId, 500, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 600C**";
+					gained = "**Payout: 500C**";
 					
 				} else if (slot1 == ":crown:" && slot2 == ":crown:" && slot3 == ":crown:") {
-					addMoney(userId, 5000, function(err, result) {
+					addMoney(userId, 4000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -691,14 +691,24 @@ bot.on('message', msg => {
 			});
 		}
 	}
-	if (msg.content.startsWith(beta + "heist")) {
+	if (msg.content.startsWith(prefix + "heist")) {
 		var chance = randomInt(1, 6);
-		var amount = randomInt(50, 150);
+		var amount = randomInt(50, 100);
 		
 		if (chance == 2) {
 			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Robbed the bank successfully and gained " + amount + " Coins.")}, 4000)});
+			addMoney(userId, amount, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+			});
 		} else {
-			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Your attempt was short lived. **You got caught!**\nYou lost 50 Coins to your bail fee.")}, 4000)});
+			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Your attempt was short lived. **You got caught!**\nYou lost 75 Coins to your bail fee.")}, 4000)});
+			subMoney(userId, 75, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+			});
 		}
 	}
 });
