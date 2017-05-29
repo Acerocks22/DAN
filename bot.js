@@ -580,6 +580,62 @@ bot.on('message', msg => {
 		
 		msg.channel.send("Celsius to Farenheit: \n`" + Celc + "C°` = `" + Faren +"F°`");
 	}
+	if (msg.content.startsWith(prefix + "slots")) {
+		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":crown:"];
+		var slot1 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
+		var slot2 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
+		var slot3 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
+		var status = "LOSS";
+		var gained = "";
+		
+		subMoney(userId, 20, function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+			if (slot1 == ":pear:" && slot2 == ":pear:" && slot3 == ":pear:") {
+				addMoney(userId, 40, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				});
+				status = " WIN ";
+				gained = "|═Payout: 40C═|";
+			} else if (slot1 == ":cherries:" && slot2 == ":cherries:" && slot3 == ":cherries:") {
+				addMoney(userId, 100, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				});
+				status = " WIN ";
+				gained = "|═Payout: 100C═|";
+			} else if (slot1 == ":lemon:" && slot2 == ":lemon:" && slot3 == ":lemon:") {
+				addMoney(userId, 75, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				});
+				status = " WIN ";
+				gained = "|═Payout: 75C═|";
+			} else if (slot1 == ":grapes:" && slot2 == ":grapes:" && slot3 == ":grapes:") {
+				addMoney(userId, 200, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				});
+				status = " WIN ";
+				gained = "|═Payout: 200C═|";
+			} else if (slot1 == ":crown:" && slot2 == ":crown:" && slot3 == ":crown:") {
+				addMoney(userId, 500, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				});
+				status = " WIN ";
+				gained = "|═Payout: 500C═|";
+			}
+		});
+		msg.channel.send(`**╔═══[SLOTS]═══╗**\n\n**▻** ${slot1}  **║**  ${slot2}  **║**  ${slot3} **◅**\n\n**╚═══  [${status}] ═══╝**\n${gained}`);
+	}
 });
 
 function randomInt(low, high) {
@@ -649,7 +705,7 @@ function addMoney(user, mAmount, cb) {
 }
 
 function subMoney(user, mAmount, cb) {
-    query(`UPDATE bank SET money = money + '${mAmount}' WHERE user_id = '${user}'`, function(err, result) {
+    query(`UPDATE bank SET money = money - '${mAmount}' WHERE user_id = '${user}'`, function(err, result) {
         if (err)
             cb(err, null);
         //console.log(result);
