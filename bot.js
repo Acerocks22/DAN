@@ -103,7 +103,7 @@ bot.on('message', msg => {
 			
 			if (difference > 1079) {
 				var curdate = Math.floor(moment() / 1000);
-				msg.channel.send(":money_mouth: :moneybag: Gave you **250** credits!");
+				msg.channel.send(":money_mouth: :moneybag: Gave you **250** coins!");
 				setTime(userId, curdate, function(err, result) {
 					if (err) {
 						console.log(err);
@@ -119,19 +119,16 @@ bot.on('message', msg => {
 				msg.channel.send(":moneybag: :alarm_clock:You have **"+timeuntil+"** hour(s) before your next payday!");
 				return;
 			}
+		});
+	}
+	if (msg.content.startsWith(prefix + "balance")) {
+		getMoney(userId, function(err, result) {
+			var amount = result.rows[0].money;
 			
-			/*setTime(userId, curdate, function(err, result) {
-				if (err) {
-					console.log(err);
-				}
-				givenPoints.clear();
-			 });*/
-			/*addMoney(userId, 250, function(err, result) {
-				if (err) {
-					console.log(err);
-				}
-				givenPoints.clear();
-			 });*/
+			msg.channel.send(":bank::moneybag: | You have **"+amount+" coins** in your account.");
+			if (err) {
+				console.log(err);
+			}
 		});
 	}
 	
@@ -657,6 +654,15 @@ function subMoney(user, mAmount, cb) {
         //console.log(result);
         cb(null, result);
 
+    });
+}
+
+function getMoney(user, cb) {
+    query(`SELECT money FROM bank WHERE user_id = '${user}'`, function(err, result) {
+        if (err) {
+            cb(err, null);
+        }
+        cb(null, result);
     });
 }
 
