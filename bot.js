@@ -97,7 +97,8 @@ bot.on('message', msg => {
 			//console.log(moment(nextdate));
 			
 			var difference = moment(date).diff(moment(paydaydate), 'minutes');
-			var timeuntil = moment(nextdate).diff(date, 'hours');
+			var timeuntil = moment(nextdate).diff(date, 'hours', true);
+			timeuntil = Math.round(timeuntil * 100) / 100;
 			
 			//console.log("ya: "+difference);
 			
@@ -601,45 +602,45 @@ bot.on('message', msg => {
 					console.log(err);
 				}
 				if (slot1 == ":pear:" && slot2 == ":pear:" && slot3 == ":pear:") {
-					addMoney(userId, 100, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
-					status = " WIN ";
-					gained = "**Payout: 40C**";
-				} else if (slot1 == ":cherries:" && slot2 == ":cherries:" && slot3 == ":cherries:") {
-					addMoney(userId, 300, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
-					status = " WIN ";
-					gained = "**Payout: 100C**";
-				} else if (slot1 == ":lemon:" && slot2 == ":lemon:" && slot3 == ":lemon:") {
-					addMoney(userId, 150, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
-					status = " WIN ";
-					gained = "**Payout: 75C**";
-				} else if (slot1 == ":grapes:" && slot2 == ":grapes:" && slot3 == ":grapes:") {
 					addMoney(userId, 500, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 200C**";
-				} else if (slot1 == ":crown:" && slot2 == ":crown:" && slot3 == ":crown:") {
+					gained = "**Payout: 500C**";
+				} else if (slot1 == ":cherries:" && slot2 == ":cherries:" && slot3 == ":cherries:") {
+					addMoney(userId, 2000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					status = " WIN ";
+					gained = "**Payout: 2000C**";
+				} else if (slot1 == ":lemon:" && slot2 == ":lemon:" && slot3 == ":lemon:") {
+					addMoney(userId, 3000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					status = " WIN ";
+					gained = "**Payout: 3000C**";
+				} else if (slot1 == ":grapes:" && slot2 == ":grapes:" && slot3 == ":grapes:") {
 					addMoney(userId, 1000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 500C**";
+					gained = "**Payout: 1000C**";
+				} else if (slot1 == ":crown:" && slot2 == ":crown:" && slot3 == ":crown:") {
+					addMoney(userId, 5000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					status = " WIN ";
+					gained = "**Payout: 5000C**";
 				}
 				msg.channel.send(`**╔═══[SLOTS]═══╗**\n\n**▻** ${slot1}  **║**  ${slot2}  **║**  ${slot3} **◅**\n\n**╚═══  [${status}] ═══╝**\n${gained}`);
 			});
