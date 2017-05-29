@@ -596,6 +596,8 @@ bot.on('message', msg => {
 		msg.channel.send("Celsius to Farenheit: \n`" + Celc + "C°` = `" + Faren +"F°`");
 	}
 	if (msg.content.startsWith(prefix + "slots")) {
+		var user = msg.author.id;
+		
 		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:",":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":crown:", ":crown:"];
 		var slot1 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot2 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
@@ -616,10 +618,10 @@ bot.on('message', msg => {
 			if (err) {
 				console.log(err);
 			}
-			if (Number(amount) - 20 < 0) {
+			if (Number(amount) - 100 < 0) {
 				msg.channel.send("You don't have enough coins! Wait until your next payday to get some more. :smile:");
 			} else {
-				subMoney(userId, 25, function(err, result) {
+				subMoney(userId, 100, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
@@ -689,11 +691,29 @@ bot.on('message', msg => {
 			});
 		}
 	}
+	if (msg.content.startsWith(beta + "heist")) {
+		var chance = randomInt(1, 6);
+		var amount = randomInt(50, 150);
+		
+		if (chance == 2) {
+			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Robbed the bank successfully and gained " + amount + " Coins.")}, 4000)});
+		} else {
+			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Your attempt was short lived. **You got caught!**\nYou lost 50 Coins to your bail fee.")}, 4000)});
+		}
+	}
 });
 
 function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 };
+
+function isEven(n) {
+   return n % 2 == 0;
+}
+
+function isOdd(n) {
+   return Math.abs(n % 2) == 1;
+}
 
 bot.login('MzEzMzAzNjU1NjU2ODQ5NDEw.C_nr9w.VCjneeveovhq8OvTTqcHEraMv3Q');
 
