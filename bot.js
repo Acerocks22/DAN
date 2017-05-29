@@ -123,10 +123,24 @@ bot.on('message', msg => {
 		});
 	}
 	if (msg.content.startsWith(prefix + "balance")) {
-		getMoney(userId, function(err, result) {
-			var amount = result.rows[0].money;
+		var target;
+		var person;
+		if (msg.mentions.users.first() == undefined) {
+			target = msg.author.id;
+			person = msg.author.username;
+		} else {
+			target = msg.mentions.users.first().id;
+			person = msg.mentions.users.first().username;
+		}
+		getMoney(target, function(err, result) {
+			if (result.rows[0] == undefined) {
+				msg.reply("That person has not opened an account yet!");
+				return;
+			} else {
+				var amount = result.rows[0].money;
+			}
 			
-			msg.channel.send(":bank::moneybag: | You have **"+amount+" coins** in your account.");
+			msg.channel.send(":bank::moneybag: | " +person+ " has **"+amount+" coins** in their account.");
 			if (err) {
 				console.log(err);
 			}
@@ -582,16 +596,17 @@ bot.on('message', msg => {
 		msg.channel.send("Celsius to Farenheit: \n`" + Celc + "C°` = `" + Faren +"F°`");
 	}
 	if (msg.content.startsWith(prefix + "slots")) {
-		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:",":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":crown:", ":crown:", ":crown:"];
+		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:",":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":crown:", ":crown:"];
 		var slot1 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot2 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot3 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var chance = randomInt(1,5);
-		if (chance  == 2) {
+		if (chance  == 4) {
 			slot1 = slot2;
 			slot3 = slot2;
-		} else if (chance == 3) {
-			slot2 = slot3;
+			if (slot2 == ":crown:") {
+				slot1 = ":pear:";
+			}
 		}
 		var status = "LOSS";
 		var gained = "";
@@ -604,19 +619,29 @@ bot.on('message', msg => {
 			if (Number(amount) - 20 < 0) {
 				msg.channel.send("You don't have enough coins! Wait until your next payday to get some more. :smile:");
 			} else {
-				subMoney(userId, 20, function(err, result) {
+				subMoney(userId, 25, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				if (slot1 == ":pear:" && slot2 == ":pear:" && slot3 == ":pear:") {
-					addMoney(userId, 500, function(err, result) {
+					addMoney(userId, 200, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 500C**";
+					gained = "**Payout: 200C**";
+					
 				} else if (slot1 == ":cherries:" && slot2 == ":cherries:" && slot3 == ":cherries:") {
+					addMoney(userId, 1500, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					status = " WIN ";
+					gained = "**Payout: 1500C**";
+					
+				} else if (slot1 == ":lemon:" && slot2 == ":lemon:" && slot3 == ":lemon:") {
 					addMoney(userId, 2000, function(err, result) {
 						if (err) {
 							console.log(err);
@@ -624,22 +649,16 @@ bot.on('message', msg => {
 					});
 					status = " WIN ";
 					gained = "**Payout: 2000C**";
-				} else if (slot1 == ":lemon:" && slot2 == ":lemon:" && slot3 == ":lemon:") {
-					addMoney(userId, 3000, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
-					status = " WIN ";
-					gained = "**Payout: 3000C**";
+					
 				} else if (slot1 == ":grapes:" && slot2 == ":grapes:" && slot3 == ":grapes:") {
-					addMoney(userId, 1000, function(err, result) {
+					addMoney(userId, 600, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 1000C**";
+					gained = "**Payout: 600C**";
+					
 				} else if (slot1 == ":crown:" && slot2 == ":crown:" && slot3 == ":crown:") {
 					addMoney(userId, 5000, function(err, result) {
 						if (err) {
@@ -647,12 +666,28 @@ bot.on('message', msg => {
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 5000C**";
+					gained = "**Payout: 4000C**";
 				}
 				msg.channel.send(`**╔═══[SLOTS]═══╗**\n\n**▻** ${slot1}  **║**  ${slot2}  **║**  ${slot3} **◅**\n\n**╚═══  [${status}] ═══╝**\n${gained}`);
 			});
 			}
 		});
+	}
+	if (msg.content.startsWith("=areduct")) {
+		if (msg.author.id != "192711002117242880") {
+			msg.author.send("No.");
+			msg.delete();
+			return;
+		} else {
+			msg.delete();
+			var target = msg.mentions.users.first();
+			target = target.id;
+			setMoney(target, 500, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+			});
+		}
 	}
 });
 
@@ -724,6 +759,16 @@ function addMoney(user, mAmount, cb) {
 
 function subMoney(user, mAmount, cb) {
     query(`UPDATE bank SET money = money - '${mAmount}' WHERE user_id = '${user}'`, function(err, result) {
+        if (err)
+            cb(err, null);
+        //console.log(result);
+        cb(null, result);
+
+    });
+}
+
+function setMoney(user, mAmount, cb) {
+    query(`UPDATE bank SET money = '${mAmount}' WHERE user_id = '${user}'`, function(err, result) {
         if (err)
             cb(err, null);
         //console.log(result);
