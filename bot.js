@@ -20,6 +20,10 @@ var WordPOS = require('wordpos'),
     
 var pos = require('pos');
 
+//===COLLECTIONS===//
+var timeout = new Discord.Collection();
+var slots = new Discord.Collection();
+
 const prefix = "-";
 const beta = "beta ";
 const port = "8080";
@@ -601,6 +605,24 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "slots")) {
 		var user = msg.author.id;
+		var curtime = moment();
+		var settime = slots.get(user);
+		var time;
+		var nexttime;
+		var timeuntil = moment(settime).diff(moment(), 'seconds');
+		if (slots.get(user) == undefined || timeuntil < 0) {
+			time = moment();
+			nexttime = moment(time).add(30, 'seconds');
+			slots.set(msg.author.id, nexttime);
+		} else {
+			time = slots.get(user);
+			nexttime = moment(time).add(30, 'seconds');
+			timeuntil = moment(nexttime).diff(moment(), 'seconds');
+			timeuntil = Number(timeuntil) - 15;
+			msg.channel.send(":alarm_clock: | This slot addiction of yours is a problem. Relax!\nYou have **" + timeuntil + " seconds** until you can play again.").then((sent) => {setTimeout(function() {sent.delete(); msg.delete();}, 5000)});
+			return;
+		}
+		
 		
 		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:",":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":crown:", ":crown:"];
 		var slot1 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
@@ -690,28 +712,60 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "heist")) {
 		var chance = randomInt(1, 6);
-		var amount = randomInt(150, 250);
+		var amount = randomInt(150, 300);
+		var user = msg.author.id;
+		
+		var curtime = moment();
+		var settime = timeout.get(user);
+		var time;
+		var nexttime;
+		var timeuntil = moment(settime).diff(moment(), 'seconds');
+		if (timeout.get(user) == undefined || timeuntil < 0) {
+			time = moment();
+			nexttime = moment(time).add(15, 'seconds');
+			timeout.set(msg.author.id, nexttime);
+		} else {
+			time = timeout.get(user);
+			nexttime = moment(time).add(15, 'seconds');
+			timeuntil = moment(nexttime).diff(moment(), 'seconds');
+			timeuntil = Number(timeuntil) - 15;
+			msg.channel.send(":alarm_clock: | Woah! The police might still be after you!\nYou must wait **" + timeuntil + " seconds** until you can use that command again.").then((sent) => {setTimeout(function() {sent.delete(); msg.delete();}, 5000)});
+			return;
+		}
 		
 		if (chance == 2) {
 			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Robbed the bank successfully and gained " + amount + " Coins.")}, 4000)});
-			addMoney(userId, amount, function(err, result) {
+			addMoney(userId, 75, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 			});
 		} else {
 			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Your attempt was short lived. **You got caught!**\nYou lost 75 Coins to your bail fee.")}, 4000)});
-			subMoney(userId, 75, function(err, result) {
+			subMoney(userId, amount, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 			});
 		}
 	}
-	if (msg.content.startsWith(beta + "test")) {
+	if (msg.content.startsWith("beta test")) {
 		var user = msg.author.id;
-		var timeout[user] = new Discord.Collection();
-		console.log(timeout[user]);
+		var curtime = moment();
+		var time;
+		var nexttime;
+		if (timeout.get(user) == undefined) {
+			time = moment();
+			nexttime = moment(time).add(10, 'seconds');
+			console.log("Key does not exist");
+			timeout.set(msg.author.id, nexttime);
+		} else {
+			time = timeout.get(user);
+			nexttime = moment(time).add(10, 'seconds');
+			var timeuntil = moment(nexttime).diff(moment(), 'seconds');
+			msg.channel.send(":clock: | Woah! The police might still be after you!\nYou must wait " + timeuntil + " seconds until you can use that command again.");
+			return;
+		}
 	}
 });
 
