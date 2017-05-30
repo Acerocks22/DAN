@@ -167,11 +167,11 @@ bot.on('message', msg => {
 	
 	if (msg.author.bot) return;
 	
-	if (msg.content.includes("@everyone")) {
+	/*if (msg.content.includes("@everyone")) {
 		msg.delete();
 		msg.reply("Don't ping everyone >:(");
 		return;
-	}
+	}*/
 	
 	if (msg.content.startsWith(prefix + "ping")) {
         msg.channel.send("Hello! :smile:");
@@ -623,7 +623,7 @@ bot.on('message', msg => {
 					console.log(err);
 				}
 				if (slot1 == ":pear:" && slot2 == ":pear:" && slot3 == ":pear:") {
-					addMoney(userId, 100, function(err, result) {
+					addMoney(userId, 75, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -707,6 +707,11 @@ bot.on('message', msg => {
 				}
 			});
 		}
+	}
+	if (msg.content.startsWith(beta + "test")) {
+		var user = msg.author.id;
+		var timeout[user] = new Discord.Collection();
+		console.log(timeout[user]);
 	}
 });
 
