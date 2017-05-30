@@ -697,7 +697,7 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "heist")) {
 		var chance = randomInt(1, 6);
-		var amount = randomInt(50, 100);
+		var amount = randomInt(150, 250);
 		
 		if (chance == 2) {
 			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Robbed the bank successfully and gained " + amount + " Coins.")}, 4000)});
