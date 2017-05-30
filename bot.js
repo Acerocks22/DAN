@@ -735,14 +735,14 @@ bot.on('message', msg => {
 		
 		if (chance == 2) {
 			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Robbed the bank successfully and gained " + amount + " Coins.")}, 4000)});
-			addMoney(userId, 75, function(err, result) {
+			addMoney(userId, amount, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 			});
 		} else {
 			msg.reply("Attempting to rob the bank...").then((sent) => {setTimeout(() =>{sent.edit("Your attempt was short lived. **You got caught!**\nYou lost 75 Coins to your bail fee.")}, 4000)});
-			subMoney(userId, amount, function(err, result) {
+			subMoney(userId, 75, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
@@ -766,6 +766,56 @@ bot.on('message', msg => {
 			msg.channel.send(":clock: | Woah! The police might still be after you!\nYou must wait " + timeuntil + " seconds until you can use that command again.");
 			return;
 		}
+	}
+	if (msg.content.startsWith(prefix + "work")) {
+		var args = msg.content.split(' ');
+		var job = args[1];
+		var pay;
+		var chance = randomInt(1, 7);
+		
+		if (job.toLowerCase() == "plumber") {
+			pay = randomInt(125,200);
+			if (chance == 4) {
+				msg.channel.send("Life as a plumber worked out for you in the end!\nYou've made **"+pay+" Coins** during this shift.");
+			} else {
+				msg.channel.send("Something in the pipes just did *not* work! Your boss wasn't very happy. No Coins today!");
+			}
+		} else if (job.toLowerCase() == "waiter") {
+			pay = randomInt(100,150);
+			if (chance == 4 || chance == 2 || chance == 6) {
+				msg.channel.send("You were voted number one in customer service at the restaurant today! You made **"+pay+" Coins** for your efforts.");
+			} else {
+				msg.channel.send("You were all over the place! Each group of people you sat a table left because you took so long. No money today.");
+			}
+		} else if (job.toLowerCase() == "stripper") {
+			pay = randomInt(100,150);
+			if (chance == 4 || chance == 5 || chance == 1) {
+				msg.channel.send("You got pinched *and* tipped. Your hips must've been on point, because you made **"+pay+" Coins** today.");
+			} else {
+				msg.channel.send("You must've not bounced that booty hard enough, because your clients did *not* like your style.");
+			}
+		} else if (job.toLowerCase() == "clown") {
+			pay = randomInt(20, 50);
+			if (chance != 6) {
+				msg.channel.send("You apparently kept kids entertained successfully. Even if it's a meager **"+pay+" Coins**, you should still be proud!");
+			} else {
+				msg.channel.send("Uh oh, one kid started crying then they *all* started crying. I don't think you're going to be getting any money today...");
+			}
+		} else if (job.toLowerCase() == "priest") {
+			pay = randomInt(30, 75);
+			people = randomInt(12, 25);
+			if (chance != 2 || chance != 5) {
+				msg.channel.send("You shouted out your wondrous words to the skies above and blessed "+people+" new people into your religion. Now you can take that **"+pay+" Coins** in donations you got.");
+			} else {
+				msg.channel.send("The Lord Jesus was not very pleased with your work; no one donated! Better luck next time.");
+			}
+		} else {
+			msg.channel.send("Whoops! You didn't specify a valid job.");
+			return;
+		}
+	}
+	if (msg.content.startsWith(prefix + "jobs")) {
+		msg.channel.send("```\nAVAILABLE JOBS:\n-Plumber\n-Waiter\n-Stripper\n-Clown\n-Priest\n```");
 	}
 });
 
