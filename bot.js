@@ -788,17 +788,17 @@ bot.on('message', msg => {
 					}
 				 });
 				
-				if (job.toLowerCase() == "plumber") {
+				if (job.toLowerCase() == "miner") {
 					pay = randomInt(125,200);
 					if (chance == 4) {
-						msg.channel.send("Life as a plumber worked out for you in the end!\nYou've made **"+pay+" Coins** during this shift.");
+						msg.channel.send("You descended into the coal mines and discovered more than just coal. Your findings are worth "+pay+" Coins!");
 						addMoney(userId, pay, function(err, result) {
 							if (err) {
 								console.log(err);
 							}
 						});
 					} else {
-						msg.channel.send("Something in the pipes just did *not* work! Your boss wasn't very happy. No Coins today!");
+						msg.channel.send("The mine collapsed before you could get much done. The boss was too happy. No Coins today!");
 					}
 				} else if (job.toLowerCase() == "waiter") {
 					pay = randomInt(100,150);
@@ -874,7 +874,7 @@ bot.on('message', msg => {
 		});
 	}
 	if (msg.content.startsWith(prefix + "jobs")) {
-		msg.channel.send("```\nAVAILABLE JOBS:\n-Plumber\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
+		msg.channel.send("```\nAVAILABLE JOBS:\n-Miner\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
 	}
 });
 
