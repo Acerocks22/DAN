@@ -605,13 +605,13 @@ bot.on('message', msg => {
 		var timeuntil = moment(settime).diff(moment(), 'seconds');
 		if (slots.get(user) == undefined || timeuntil < 0) {
 			time = moment();
-			nexttime = moment(time).add(30, 'seconds');
+			nexttime = moment(time).add(20, 'seconds');
 			slots.set(msg.author.id, nexttime);
 		} else {
 			time = slots.get(user);
-			nexttime = moment(time).add(30, 'seconds');
+			nexttime = moment(time).add(20, 'seconds');
 			timeuntil = moment(nexttime).diff(moment(), 'seconds');
-			timeuntil = Number(timeuntil) - 15;
+			timeuntil = Number(timeuntil) - 20;
 			msg.channel.send(":alarm_clock: | This slot addiction of yours is a problem. Relax!\nYou have **" + timeuntil + " seconds** until you can play again.").then((sent) => {setTimeout(function() {sent.delete(); msg.delete();}, 5000)});
 			return;
 		}
@@ -849,6 +849,19 @@ bot.on('message', msg => {
 					} else {
 						msg.channel.send("The Lord Jesus was not very pleased with your work; no one donated! Better luck next time.");
 					}
+				} else if (job.toLowerCase() == "memer") {
+					pay = randomInt(5, 16);
+					people = randomInt(12, 25);
+					if (chance != 1) {
+						msg.channel.send("You made a meme and it went viral! Now you can reap the "+pay+" Coins in ad revenue.");
+						addMoney(userId, pay, function(err, result) {
+							if (err) {
+								console.log(err);
+							}
+						});
+					} else {
+						msg.channel.send("That meme and this job was a joke. You made absolutely nothing.");
+					}
 				} else {
 					msg.channel.send("Whoops! You didn't specify a valid job.");
 					return;
@@ -861,7 +874,7 @@ bot.on('message', msg => {
 		});
 	}
 	if (msg.content.startsWith(prefix + "jobs")) {
-		msg.channel.send("```\nAVAILABLE JOBS:\n-Plumber\n-Waiter\n-Stripper\n-Clown\n-Priest\n```");
+		msg.channel.send("```\nAVAILABLE JOBS:\n-Plumber\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
 	}
 });
 
