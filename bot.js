@@ -882,6 +882,10 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "rob")) {
 		var target = msg.mentions.users.first().id;
+		if (target == undefined) {
+			msg.channel.send("Make sure you define a valid target!");
+			return;
+		}
 		var youramount;
 		var theiramount;
 		var chance;
