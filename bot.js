@@ -283,6 +283,7 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "duel")) {
 		var target = msg.mentions.users.first();
+		var targetid = msg.mentions.users.first().id;
 		var winner = randomInt(1,3);
 		var loser;
 		
@@ -329,14 +330,14 @@ bot.on('message', msg => {
 			{ maxMatches: 1, time: 30000 }
 		);
 		collector.on('collect', (msg, collected) => {
-			if (msg.author != target) {
+			if (msg.author.id != targetid) {
 				return;
+			} else {
+				msg.channel.send(battlemsg);
 			}
-			msg.channel.send(battlemsg);
 		});
 		collector.on('end', collected => {
-			console.log(collected.length);
-			if (collected.length == undefined) {
+			if (collected.size <= 0) {
 				msg.channel.send(target + " wimped out and didn't respond!");
 				return;
 			}
@@ -802,7 +803,7 @@ bot.on('message', msg => {
 								}
 							});
 						} else {
-							msg.channel.send("The mine collapsed before you could get much done. The boss was too happy. No Coins today!");
+							msg.channel.send("The mine collapsed before you could get much done. The boss was not too happy. No Coins today!");
 						}
 					} else if (job.toLowerCase() == "waiter") {
 						pay = randomInt(100,150);
@@ -818,7 +819,7 @@ bot.on('message', msg => {
 						}
 					} else if (job.toLowerCase() == "stripper") {
 						pay = randomInt(100,150);
-						if (chance == 4 || chance == 5 || chance == 1) {
+						if (chance == 4 || chance == 5 || chance == 1 || chance == 2) {
 							msg.channel.send("You got pinched *and* tipped. Your hips must've been on point, because you made **"+pay+" Coins** today.");
 							addMoney(userId, pay, function(err, result) {
 								if (err) {
@@ -878,6 +879,62 @@ bot.on('message', msg => {
 	if (msg.content.startsWith(prefix + "jobs")) {
 		msg.channel.send("```\nAVAILABLE JOBS:\n-Miner\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
 	}
+	/*if (msg.content.startsWith(prefix + "rob")) {
+		var target = msg.mentions.users.first().id;
+		var youramount = 45;
+		var theiramount = 50;
+		var chance;
+		var take;
+		getMoney(userId, function(err, result) {
+			youramount = result.rows[0].money;
+			if (err) {
+				console.log(err);
+			}
+		});
+		getMoney(target, function(err, result) {
+			theiramount = result.rows[0].money;
+			if (err) {
+				console.log(err);
+			}
+		});
+		if (Number(theiramount) - 50 < 0) {
+			msg.channel.send("This person doesn't have enough Coins to rob them!");
+		} else {
+			if (youramount < theiramount) {
+				chance = randomInt(1,5);
+				take = randomInt(50, 150);
+				if (Number(theiramount) - take < 0) {
+					var newtheir = theiramount - theiramount;
+					take = theiramount;
+					addMoney(userId, take, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					subMoney(target, newtheir, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				} else {
+					var newtheir = theiramount - take;
+					addMoney(userId, take, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					subMoney(target, newtheir, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			} else if (theiramount < youramount) {
+				chance = randomInt(1,10);
+				take = randomInt(1, 149);
+			}
+		}
+	}*/
 });
 
 function randomInt(low, high) {
