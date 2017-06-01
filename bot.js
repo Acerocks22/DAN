@@ -605,19 +605,19 @@ bot.on('message', msg => {
 		var timeuntil = moment(settime).diff(moment(), 'seconds');
 		if (slots.get(user) == undefined || timeuntil < 0) {
 			time = moment();
-			nexttime = moment(time).add(20, 'seconds');
+			nexttime = moment(time).add(10, 'seconds');
 			slots.set(msg.author.id, nexttime);
 		} else {
 			time = slots.get(user);
-			nexttime = moment(time).add(20, 'seconds');
+			nexttime = moment(time).add(10, 'seconds');
 			timeuntil = moment(nexttime).diff(moment(), 'seconds');
-			timeuntil = Number(timeuntil) - 20;
+			timeuntil = Number(timeuntil) - 10;
 			msg.channel.send(":alarm_clock: | This slot addiction of yours is a problem. Relax!\nYou have **" + timeuntil + " seconds** until you can play again.").then((sent) => {setTimeout(function() {sent.delete(); msg.delete();}, 5000)});
 			return;
 		}
 		
 		
-		var slotOptions = [":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":pear:", ":cherries:", ":cherries:", ":cherries:",":cherries:", ":cherries:", ":lemon:", ":lemon:", ":lemon:", ":lemon:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":grapes:", ":crown:", ":crown:"];
+		var slotOptions = [":pear:", ":lemon:", ":pear:", ":cherries:", ":pear:", ":lemon:", ":pear:", ":cherries:", ":grapes:", ":cherries:",":pear:", ":cherries:", ":cherries:", ":grapes:", ":lemon:", ":pear:", ":crown:", ":lemon:", ":grapes:", ":grapes:", ":grapes:", ":pear:", ":grapes:", ":grapes:", ":crown:"];
 		var slot1 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot2 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
 		var slot3 = slotOptions[Math.floor(Math.random() * slotOptions.length)];
@@ -638,13 +638,13 @@ bot.on('message', msg => {
 					console.log(err);
 				}
 				if (slot1 == ":pear:" && slot2 == ":pear:" && slot3 == ":pear:") {
-					addMoney(userId, 75, function(err, result) {
+					addMoney(userId, 200, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 100C**";
+					gained = "**Payout: 200C**";
 					
 				} else if (slot1 == ":cherries:" && slot2 == ":cherries:" && slot3 == ":cherries:") {
 					addMoney(userId, 800, function(err, result) {
@@ -665,13 +665,13 @@ bot.on('message', msg => {
 					gained = "**Payout: 1000C**";
 					
 				} else if (slot1 == ":grapes:" && slot2 == ":grapes:" && slot3 == ":grapes:") {
-					addMoney(userId, 500, function(err, result) {
+					addMoney(userId, 600, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
 					});
 					status = " WIN ";
-					gained = "**Payout: 500C**";
+					gained = "**Payout: 600C**";
 					
 				} else if (slot1 == ":crown:" && slot2 == ":crown:" && slot3 == ":crown:") {
 					addMoney(userId, 4000, function(err, result) {
@@ -705,7 +705,7 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "heist")) {
 		var chance = randomInt(1, 6);
-		var amount = randomInt(150, 300);
+		var amount = randomInt(300, 500);
 		var user = msg.author.id;
 		
 		var curtime = moment();
@@ -781,92 +781,94 @@ bot.on('message', msg => {
 			timeuntil = Math.round(timeuntil * 100) / 100;
 			
 			if (difference > 360) {
-				var curdate = Math.floor(moment() / 1000);
-				setWork(userId, curdate, function(err, result) {
-					if (err) {
-						console.log(err);
-					}
-				 });
-				
-				if (job.toLowerCase() == "miner") {
-					pay = randomInt(125,200);
-					if (chance == 4) {
-						msg.channel.send("You descended into the coal mines and discovered more than just coal. Your findings are worth "+pay+" Coins!");
-						addMoney(userId, pay, function(err, result) {
-							if (err) {
-								console.log(err);
-							}
-						});
-					} else {
-						msg.channel.send("The mine collapsed before you could get much done. The boss was too happy. No Coins today!");
-					}
-				} else if (job.toLowerCase() == "waiter") {
-					pay = randomInt(100,150);
-					if (chance == 4 || chance == 2 || chance == 6) {
-						msg.channel.send("You were voted number one in customer service at the restaurant today! You made **"+pay+" Coins** for your efforts.");
-						addMoney(userId, pay, function(err, result) {
-							if (err) {
-								console.log(err);
-							}
-						});
-					} else {
-						msg.channel.send("You were all over the place! Each group of people you sat a table left because you took so long. No money today.");
-					}
-				} else if (job.toLowerCase() == "stripper") {
-					pay = randomInt(100,150);
-					if (chance == 4 || chance == 5 || chance == 1) {
-						msg.channel.send("You got pinched *and* tipped. Your hips must've been on point, because you made **"+pay+" Coins** today.");
-						addMoney(userId, pay, function(err, result) {
-							if (err) {
-								console.log(err);
-							}
-						});
-					} else {
-						msg.channel.send("You must've not bounced that booty hard enough, because your clients did *not* like your style.");
-					}
-				} else if (job.toLowerCase() == "clown") {
-					pay = randomInt(20, 50);
-					if (chance != 6) {
-						msg.channel.send("You apparently kept kids entertained successfully. Even if it's a meager **"+pay+" Coins**, you should still be proud!");
-						addMoney(userId, pay, function(err, result) {
-							if (err) {
-								console.log(err);
-							}
-						});
-					} else {
-						msg.channel.send("Uh oh, one kid started crying then they *all* started crying. I don't think you're going to be getting any money today...");
-					}
-				} else if (job.toLowerCase() == "priest") {
-					pay = randomInt(30, 75);
-					people = randomInt(12, 25);
-					if (chance != 2 || chance != 5) {
-						msg.channel.send("You shouted out your wondrous words to the skies above and blessed "+people+" new people into your religion. Now you can take that **"+pay+" Coins** in donations you got.");
-						addMoney(userId, pay, function(err, result) {
-							if (err) {
-								console.log(err);
-							}
-						});
-					} else {
-						msg.channel.send("The Lord Jesus was not very pleased with your work; no one donated! Better luck next time.");
-					}
-				} else if (job.toLowerCase() == "memer") {
-					pay = randomInt(5, 16);
-					people = randomInt(12, 25);
-					if (chance != 1) {
-						msg.channel.send("You made a meme and it went viral! Now you can reap the "+pay+" Coins in ad revenue.");
-						addMoney(userId, pay, function(err, result) {
-							if (err) {
-								console.log(err);
-							}
-						});
-					} else {
-						msg.channel.send("That meme and this job was a joke. You made absolutely nothing.");
-					}
-				} else {
+				if (job == undefined) {
 					msg.channel.send("Whoops! You didn't specify a valid job.");
 					return;
+				} else {
+					var curdate = Math.floor(moment() / 1000);
+					setWork(userId, curdate, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					 });
+					
+					if (job.toLowerCase() == "miner") {
+						pay = randomInt(200,275);
+						if (chance == 4) {
+							msg.channel.send("You descended into the coal mines and discovered more than just coal. Your findings are worth "+pay+" Coins!");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("The mine collapsed before you could get much done. The boss was too happy. No Coins today!");
+						}
+					} else if (job.toLowerCase() == "waiter") {
+						pay = randomInt(100,150);
+						if (chance == 4 || chance == 2 || chance == 6) {
+							msg.channel.send("You were voted number one in customer service at the restaurant today! You made **"+pay+" Coins** for your efforts.");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("You were all over the place! Each group of people you sat a table left because you took so long. No money today.");
+						}
+					} else if (job.toLowerCase() == "stripper") {
+						pay = randomInt(100,150);
+						if (chance == 4 || chance == 5 || chance == 1) {
+							msg.channel.send("You got pinched *and* tipped. Your hips must've been on point, because you made **"+pay+" Coins** today.");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("You must've not bounced that booty hard enough, because your clients did *not* like your style.");
+						}
+					} else if (job.toLowerCase() == "clown") {
+						pay = randomInt(20, 50);
+						if (chance != 6) {
+							msg.channel.send("You apparently kept kids entertained successfully. Even if it's a meager **"+pay+" Coins**, you should still be proud!");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("Uh oh, one kid started crying then they *all* started crying. I don't think you're going to be getting any money today...");
+						}
+					} else if (job.toLowerCase() == "priest") {
+						pay = randomInt(30, 75);
+						people = randomInt(12, 25);
+						if (chance != 2 || chance != 5) {
+							msg.channel.send("You shouted out your wondrous words to the skies above and blessed "+people+" new people into your religion. Now you can take that **"+pay+" Coins** in donations you got.");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("The Lord Jesus was not very pleased with your work; no one donated! Better luck next time.");
+						}
+					} else if (job.toLowerCase() == "memer") {
+						pay = randomInt(5, 16);
+						people = randomInt(12, 25);
+						if (chance != 1) {
+							msg.channel.send("You made a meme and it went viral! Now you can reap the "+pay+" Coins in ad revenue.");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("That meme and this job was a joke. You made absolutely nothing.");
+						}
+					}
+					return;
 				}
-				return;
 			} else if (difference <= 360) {
 				msg.channel.send(":office::alarm_clock: | You have **"+timeuntil+"** hour(s) before you can work again.");
 				return;
