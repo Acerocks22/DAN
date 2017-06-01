@@ -886,6 +886,10 @@ bot.on('message', msg => {
 			msg.channel.send("Make sure you define a valid target!");
 			return;
 		}
+		if (target == msg.author.id) {
+			msg.channel.send("Don't rob yourself. It's pointless.");
+			return;
+		}
 		var youramount;
 		var theiramount;
 		var chance;
