@@ -900,7 +900,7 @@ bot.on('message', msg => {
 		var settime = slots.get(user);
 		var time;
 		var nexttime;
-		var timeuntil = moment(settime).diff(moment(), 'seconds');
+		var timeuntil = moment(settime).diff(moment(), 'minutes');
 		if (rob.get(user) == undefined || timeuntil < 0) {
 			time = moment();
 			nexttime = moment(time).add(10, 'minutes');
