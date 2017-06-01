@@ -880,7 +880,7 @@ bot.on('message', msg => {
 	if (msg.content.startsWith(prefix + "jobs")) {
 		msg.channel.send("```\nAVAILABLE JOBS:\n-Miner\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
 	}
-	if (msg.content.startsWith(prefix + "rob")) {
+	/*if (msg.content.startsWith(prefix + "rob")) {
 		var target = msg.mentions.users.first().id;
 		if (target == undefined) {
 			msg.channel.send("Make sure you define a valid target!");
@@ -1009,7 +1009,7 @@ bot.on('message', msg => {
 				}
 			}
 		}
-	}
+	}*/
 });
 
 function randomInt(low, high) {
