@@ -23,8 +23,9 @@ var pos = require('pos');
 //===COLLECTIONS===//
 var timeout = new Discord.Collection();
 var slots = new Discord.Collection();
+var rob = new Discord.Collection();
 
-const prefix = "-";
+const prefix = "+";
 const beta = "beta ";
 const port = "8080";
 var post;
@@ -879,62 +880,128 @@ bot.on('message', msg => {
 	if (msg.content.startsWith(prefix + "jobs")) {
 		msg.channel.send("```\nAVAILABLE JOBS:\n-Miner\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
 	}
-	/*if (msg.content.startsWith(prefix + "rob")) {
+	if (msg.content.startsWith(prefix + "rob")) {
 		var target = msg.mentions.users.first().id;
-		var youramount = 45;
-		var theiramount = 50;
+		var youramount;
+		var theiramount;
 		var chance;
 		var take;
+		
+		var user = msg.author.id;
+		var curtime = moment();
+		var settime = slots.get(user);
+		var time;
+		var nexttime;
+		var timeuntil = moment(settime).diff(moment(), 'seconds');
+		if (rob.get(user) == undefined || timeuntil < 0) {
+			time = moment();
+			nexttime = moment(time).add(10, 'minutes');
+			rob.set(msg.author.id, nexttime);
+		} else {
+			time = rob.get(user);
+			nexttime = moment(time).add(10, 'minutes');
+			timeuntil = moment(nexttime).diff(moment(), 'minutes');
+			timeuntil = Number(timeuntil) - 10;
+			msg.channel.send(":alarm_clock: | You can't rob someone for another "+timeuntil+" minutes.").then((sent) => {setTimeout(function() {sent.delete(); msg.delete();}, 5000)});
+			return;
+		}
+		
 		getMoney(userId, function(err, result) {
 			youramount = result.rows[0].money;
 			if (err) {
 				console.log(err);
 			}
-		});
-		getMoney(target, function(err, result) {
-			theiramount = result.rows[0].money;
-			if (err) {
-				console.log(err);
-			}
-		});
-		if (Number(theiramount) - 50 < 0) {
-			msg.channel.send("This person doesn't have enough Coins to rob them!");
-		} else {
-			if (youramount < theiramount) {
-				chance = randomInt(1,5);
-				take = randomInt(50, 150);
-				if (Number(theiramount) - take < 0) {
-					var newtheir = theiramount - theiramount;
-					take = theiramount;
-					addMoney(userId, take, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
-					subMoney(target, newtheir, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
-				} else {
-					var newtheir = theiramount - take;
-					addMoney(userId, take, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
-					subMoney(target, newtheir, function(err, result) {
-						if (err) {
-							console.log(err);
-						}
-					});
+			getMoney(target, function(err, result) {
+				theiramount = result.rows[0].money;
+				if (err) {
+					console.log(err);
 				}
-			} else if (theiramount < youramount) {
-				chance = randomInt(1,10);
-				take = randomInt(1, 149);
+				robThem();
+			});
+		});
+		
+		function robThem() {
+			var person = msg.mentions.users.first().username;
+			if (Number(theiramount) - 50 < 0) {
+				msg.channel.send("This person doesn't have enough Coins to rob them!");
+			} else {
+				if (youramount < theiramount) {
+					chance = randomInt(1,5);
+					take = randomInt(50, 150);
+					if (chance == 2 || chance == 4) {
+						if (Number(theiramount) - take < 0) {
+							var newtheir = theiramount - theiramount;
+							take = theiramount;
+							msg.channel.send("You successfully robbed "+person+" of "+take+" Coins!");
+							addMoney(userId, take, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+							subMoney(target, take, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							var newtheir = theiramount - take;
+							msg.channel.send("You successfully robbed "+person+" of "+take+" Coins!");
+							addMoney(userId, take, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+							subMoney(target, newtheir, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						}
+					} else {
+						msg.channel.send("You tried to rob them of some Coins but failed horribly!");
+						return;
+					}
+				} else if (theiramount <= youramount) {
+					chance = randomInt(1,11);
+					take = randomInt(1, 149);
+					
+					if (chance == 2 || chance == 4 || chance == 7) {
+						if (Number(theiramount) - take < 0) {
+							var newtheir = theiramount - theiramount;
+							take = theiramount;
+							msg.channel.send("You successfully robbed "+person+" of "+take+" Coins!");
+							addMoney(userId, take, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+							subMoney(target, take, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							var newtheir = theiramount - take;
+							msg.channel.send("You successfully robbed "+person+" of "+take+" Coins!");
+							addMoney(userId, take, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+							subMoney(target, newtheir, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						}
+					} else {
+						msg.channel.send("You tried to rob them of some Coins but failed horribly!");
+						return;
+					}
+				}
 			}
 		}
-	}*/
+	}
 });
 
 function randomInt(low, high) {
