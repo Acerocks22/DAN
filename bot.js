@@ -25,7 +25,7 @@ var timeout = new Discord.Collection();
 var slots = new Discord.Collection();
 var rob = new Discord.Collection();
 
-const prefix = "+";
+const prefix = "-";
 const beta = "beta ";
 const port = "8080";
 var post;
