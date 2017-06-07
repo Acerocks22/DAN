@@ -434,7 +434,7 @@ bot.on('message', msg => {
 	}
 	if (msg.content.startsWith(prefix + "zodiac")) {
 		var args = msg.content.split(' ');
-		if (msg.content.includes("/") || msg.content.includes(" ")) {
+		if (msg.content.includes("/")) {
 			msg.channel.send("Make sure you follow the correct syntax.");
 			return;
 		}
