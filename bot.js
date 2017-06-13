@@ -328,15 +328,11 @@ bot.on('message', msg => {
 		msg.channel.send(target + ", " + msg.author + " has challenged you to a duel! Accept the duel with `" + prefix + "accept`.");
 		
 		const collector = msg.channel.createCollector(
-			m => m.content.startsWith(prefix + "accept"),
+			m => m.content.startsWith(prefix + "accept") && msg.author.id == targetid,
 			{ maxMatches: 1, time: 30000 }
 		);
 		collector.on('collect', (msg, collected) => {
-			if (msg.author.id != targetid) {
-				return;
-			} else {
-				msg.channel.send(battlemsg);
-			}
+			msg.channel.send(battlemsg);
 		});
 		collector.on('end', collected => {
 			if (collected.size <= 0) {
