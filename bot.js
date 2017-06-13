@@ -24,6 +24,7 @@ var pos = require('pos');
 var timeout = new Discord.Collection();
 var slots = new Discord.Collection();
 var rob = new Discord.Collection();
+var social = new Discord.Collection();
 
 const prefix = "-";
 const beta = "beta ";
@@ -880,6 +881,87 @@ bot.on('message', msg => {
 	if (msg.content.startsWith(prefix + "jobs")) {
 		msg.channel.send("```\nAVAILABLE JOBS:\n-Miner\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
 	}
+	if (msg.content.startsWith(prefix + "top")) {
+		getTop(function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            var topMsg = "";
+
+            for (i = 0; i < 10; i++) {
+				var userid = result.rows[i].user_id;
+				var user = bot.users.get(userid).username;
+				var coins = result.rows[i].money;
+                var ii = i + 1;
+                topMsg += "`["+ii+"]` **>"+user+"** with a total of **"+coins+" Coins.**\n";
+            }
+            msg.channel.send("`-The Richest Users-`\n" + topMsg);
+        });
+	}
+	/*if (msg.content.startsWith(prefix + "social")) {
+		var args = msg.content.split(" ");
+		if (args == undefined) {
+			msg.channel.send("You must define a command.");
+		}
+		if (args == "open") {
+			
+		}
+	}*/
+	/*if (msg.content.startsWith(prefix + "social")) {
+		//console.log(bot.guilds.values());
+		message = msg;
+		user = msg.author.username;
+		server = msg.guild.name;
+		var args = msg.content.split(" ");
+		var args = args[0] + "  ";
+		post = msg.content.slice(msg.content.indexOf('.giraffe') + args.length);
+		if (!post) {
+			msg.channel.send("Send a valid message.");
+			return;
+		} else if (post.toLowerCase().includes("fag") || post.toLowerCase().includes("fuck you") || post.toLowerCase().includes("cunt") || post.toLowerCase().includes("kys") || post.toLowerCase().includes("kill yourself")) {
+			msg.channel.send("Be nice! You're talking on a public chat.");
+			return;
+		} 
+		
+		msg.channel.send("Sending a message to everyone...\n`" + post + "`").then((sent) => {setTimeout(() =>{sent.edit("Sent message:\n`" + post + "`")},3000)});
+		setTimeout(function() {
+			var postchannel;
+			var postchannel2;
+			var value;
+			
+			console.log()
+			
+			for (i = 0; i < bot.guilds.values().channels.length; i++) {
+				value = windowArray[index];
+				if (value.substring(0, value.length) === "bot") {
+					// You've found it, the full text is in `value`.
+					// So you might grab it and break the loop, although
+					// really what you do having found it depends on
+					// what you need.
+					var result = value;
+					console.log(result);
+					break;
+				}
+			}
+			
+			function isSub(sub) {
+				return sub.indexOf("bot") >= 0
+			}
+						
+			for (const guild of bot.guilds.values()) {
+				//console.log(guild.channels.find("name", "bot"));
+				console.log(guild.channels.find("name", a => {return a.includes("bot")}));
+				
+				if (guild.channels.find("name", "bot_commands")) {
+					postchannel = guild.channels.find("name", "bot_commands");
+					postchannel.send("```\nMSG from " + user + " in the server \"" + server + "\":\n\"" + post  + "\"\n```");
+				} else if (guild.channels.find("name", "bot_spam")) {
+					postchannel = guild.channels.find("name", "bot_spam");
+					postchannel.send("```\nMSG from " + user + " in the server \"" + server + "\":\n\"" + post  + "\"\n```");
+				}
+			}
+		}, 3000);
+	}*/
 	/*if (msg.content.startsWith(prefix + "rob")) {
 		var target = msg.mentions.users.first().id;
 		if (target == undefined) {
@@ -1039,6 +1121,16 @@ app.server.listen(process.env.PORT || 4000);
 console.log('DANbot is listening on port ' + app.server.address().port + '!');
 
 //====DATABASE FUNCTIONS====//
+function getTop(cb) {
+    query(`SELECT money, user_id FROM bank ORDER BY money DESC LIMIT 11`, function(err, result) {
+        if (err)
+            cb(err, null);
+        //console.log(result);
+        cb(null, result);
+
+    });
+}
+
 function addUser(user, money, cb) {
     query(`INSERT INTO bank(user_id, money) VALUES ('${user}', '${money}') ON CONFLICT (user_id) DO NOTHING`, function(err, result) {
         if (err)
