@@ -11,6 +11,8 @@ var casual = require('casual');
 var query = require('./lib/db.js');
 var moment = require('moment');
 moment().format();
+var Canvas = require('canvas');
+var fs = require('fs');
 
 var acronym = require("acronym");
 var path = require("path");
@@ -865,6 +867,9 @@ bot.on('message', msg => {
 						} else {
 							msg.channel.send("That meme and this job was a joke. You made absolutely nothing.");
 						}
+					} else {
+						msg.channel.send("Whoops! You didn't specify a valid job.");
+						return;
 					}
 					return;
 				}
@@ -893,6 +898,62 @@ bot.on('message', msg => {
             }
             msg.channel.send("`-The Richest Users-`\n" + topMsg);
         });
+	}
+	if (msg.content.startsWith(prefix + "testang")) {
+		var Image = Canvas.Image;
+		var canvas = new Canvas(280, 200);
+		var ctx = canvas.getContext('2d');
+		var out = fs.createWriteStream(__dirname + '/house.png');
+		var stream = canvas.pngStream();
+		//var img = new Image();
+		
+		ctx.beginPath();
+		ctx.rect(0, 0, 280, 200);
+		ctx.fillStyle = "lightblue";
+		ctx.fill();
+		//Cloud
+		ctx.beginPath();
+		ctx.arc(50,70,30,0,2*Math.PI);
+		ctx.fillStyle = "white";
+		ctx.fill();
+		
+		ctx.beginPath();
+		ctx.arc(90,60,40,0,2*Math.PI);
+		ctx.fillStyle = "white";
+		ctx.fill();
+		
+		/*img.onload = function() {
+			ctx.drawImage(img, 15, 15, 60, 60);
+		}
+		img.onerror = function(err) {
+			console.log(err);
+		}
+		img.src = fs.readFileSync(path.join(__dirname, 'houses/h1.png'));*/
+		
+		fs.readFile(__dirname + '/houses/h1.png', function(err, house){
+			if (err) throw err;
+			var img = new Image;
+			img.onload = function() {
+				ctx.drawImage(img, 0, 0, img.width / 4, img.height / 4);
+			}
+			img.src = house;
+		});
+			
+		ctx.beginPath();
+		ctx.arc(130,70,30,0,2*Math.PI);
+		ctx.fillStyle = "white";
+		ctx.fill();
+		//Ground
+		ctx.beginPath();
+		ctx.rect(0, 140, 300, 80);
+		ctx.fillStyle = "green";
+		ctx.fill();
+			
+		stream.on('data', function(chunk){
+		  out.write(chunk);
+		});
+			
+		msg.channel.send("**"+msg.author.username+ "'s** house:", {files: ["house.png"]});
 	}
 	/*if (msg.content.startsWith(prefix + "social")) {
 		var args = msg.content.split(" ");
