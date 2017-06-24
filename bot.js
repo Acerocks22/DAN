@@ -762,6 +762,11 @@ bot.on('message', msg => {
 		}
 	}
 	if (msg.content.startsWith(prefix + "work")) {
+		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer'];
+		if(jobs.indexOf(msg.content.toLowerCase()) !== -1) {
+			msg.channel.send("Whoops! You didn't specify a valid job.");
+			return;
+		}
 		var args = msg.content.split(' ');
 		var job = args[1];
 		var pay;
@@ -867,9 +872,6 @@ bot.on('message', msg => {
 						} else {
 							msg.channel.send("That meme and this job was a joke. You made absolutely nothing.");
 						}
-					} else {
-						msg.channel.send("Whoops! You didn't specify a valid job.");
-						return;
 					}
 					return;
 				}
