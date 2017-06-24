@@ -762,15 +762,16 @@ bot.on('message', msg => {
 		}
 	}
 	if (msg.content.startsWith(prefix + "work")) {
-		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer'];
-		if(jobs.indexOf(msg.content.toLowerCase()) !== -1) {
-			msg.channel.send("Whoops! You didn't specify a valid job.");
-			return;
-		}
 		var args = msg.content.split(' ');
 		var job = args[1];
 		var pay;
 		var chance = randomInt(1, 7);
+		
+		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer'];
+		if(jobs.indexOf(job.toLowerCase()) !== -1) {
+			msg.channel.send("Whoops! You didn't specify a valid job.");
+			return;
+		}
 		
 		getWork(userId, function(err, result) {
 			if (err) {
