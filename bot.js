@@ -784,7 +784,7 @@ bot.on('message', msg => {
 			timeuntil = Math.round(timeuntil * 100) / 100;
 			
 			if (difference > 360) {
-				if(jobs.indexOf(job.toLowerCase()) !== -1) {
+				if(jobs.indexOf(job.toLowerCase()) == -1) {
 					msg.channel.send("Whoops! You didn't specify a valid job.");
 					return;
 				}
