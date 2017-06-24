@@ -768,10 +768,6 @@ bot.on('message', msg => {
 		var chance = randomInt(1, 7);
 		
 		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer'];
-		if(jobs.indexOf(job.toLowerCase()) !== -1) {
-			msg.channel.send("Whoops! You didn't specify a valid job.");
-			return;
-		}
 		
 		getWork(userId, function(err, result) {
 			if (err) {
@@ -788,6 +784,10 @@ bot.on('message', msg => {
 			timeuntil = Math.round(timeuntil * 100) / 100;
 			
 			if (difference > 360) {
+				if(jobs.indexOf(job.toLowerCase()) !== -1) {
+					msg.channel.send("Whoops! You didn't specify a valid job.");
+					return;
+				}
 				if (job == undefined) {
 					msg.channel.send("Whoops! You didn't specify a valid job.");
 					return;
