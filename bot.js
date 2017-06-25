@@ -784,11 +784,8 @@ bot.on('message', msg => {
 			timeuntil = Math.round(timeuntil * 100) / 100;
 			
 			if (difference > 360) {
-				if(jobs.indexOf(job.toLowerCase()) == -1) {
-					msg.channel.send("Whoops! You didn't specify a valid job.");
-					return;
-				}
-				if (job == undefined) {
+				var jobb = job.toLowerCase();
+				if (job == undefined || jobb != "miner" || jobb != "stripper" || jobb != "waiter" || jobb != "priest" || jobb != "clown" || jobb != "memer") {
 					msg.channel.send("Whoops! You didn't specify a valid job.");
 					return;
 				} else {
