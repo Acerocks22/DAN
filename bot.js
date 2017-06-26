@@ -918,7 +918,7 @@ bot.on('message', msg => {
             
             console.log(houseNum);
             
-            if (result.rows[0].house == 1) {
+            if (result.rows[0].house == 0) {
 				console.log("Nothing there.");
 				msg.reply("Bought you some land. Type -house again to see it!");
 				setHouse(userId, 0, function(err, result) {
