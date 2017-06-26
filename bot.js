@@ -705,6 +705,23 @@ bot.on('message', msg => {
 			});
 		}
 	}
+	if (msg.content.startsWith("=aradd")) {
+		if (msg.author.id != "192711002117242880") {
+			msg.author.send("No.");
+			msg.delete();
+			return;
+		} else {
+			msg.delete();
+			var target = msg.mentions.users.first();
+			target = target.id;
+			var amount = msg.content.split(' ')[1];
+			addMoney(target, amount, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+			});
+		}
+	}
 	if (msg.content.startsWith(prefix + "heist")) {
 		var chance = randomInt(1, 6);
 		var amount = randomInt(300, 500);
