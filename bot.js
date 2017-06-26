@@ -27,6 +27,7 @@ var timeout = new Discord.Collection();
 var slots = new Discord.Collection();
 var rob = new Discord.Collection();
 var social = new Discord.Collection();
+var social = new Discord.Collection();
 
 const prefix = "-";
 const beta = "beta ";
@@ -767,7 +768,7 @@ bot.on('message', msg => {
 		var pay;
 		var chance = randomInt(1, 7);
 		
-		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer'];
+		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', 'cashier', 'ceo'];
 		
 		getWork(userId, function(err, result) {
 			if (err) {
@@ -898,61 +899,460 @@ bot.on('message', msg => {
             msg.channel.send("`-The Richest Users-`\n" + topMsg);
         });
 	}
-	if (msg.content.startsWith(prefix + "testang")) {
-		var Image = Canvas.Image;
-		var canvas = new Canvas(280, 200);
-		var ctx = canvas.getContext('2d');
-		var out = fs.createWriteStream(__dirname + '/house.png');
-		var stream = canvas.pngStream();
-		//var img = new Image();
+	if (msg.content.startsWith(prefix + "house")) {
+		var bw;
+		var bh;
+		var bx;
+		var by;
+		var bgSky = "lightblue";
+		var bgGround = "#48a52c";
+		var bgCloud = "#f2f2f2";
+		var houseNum;
 		
-		ctx.beginPath();
-		ctx.rect(0, 0, 280, 200);
-		ctx.fillStyle = "lightblue";
-		ctx.fill();
-		//Cloud
-		ctx.beginPath();
-		ctx.arc(50,70,30,0,2*Math.PI);
-		ctx.fillStyle = "white";
-		ctx.fill();
-		
-		ctx.beginPath();
-		ctx.arc(90,60,40,0,2*Math.PI);
-		ctx.fillStyle = "white";
-		ctx.fill();
-		
-		/*img.onload = function() {
-			ctx.drawImage(img, 15, 15, 60, 60);
-		}
-		img.onerror = function(err) {
-			console.log(err);
-		}
-		img.src = fs.readFileSync(path.join(__dirname, 'houses/h1.png'));*/
-		
-		fs.readFile(__dirname + '/houses/h1.png', function(err, house){
-			if (err) throw err;
-			var img = new Image;
-			img.onload = function() {
-				ctx.drawImage(img, 0, 0, img.width / 4, img.height / 4);
+		getHouse(userId, function(err, result) {
+            if (err) {
+                console.log(err);
+            }
+            
+            houseNum = result.rows[0].house;
+            
+            console.log(houseNum);
+            
+            if (result.rows[0].house == 1) {
+				console.log("Nothing there.");
+				msg.reply("Bought you some land. Type -house again to see it!");
+				setHouse(userId, 0, function(err, result) {
+					if (err) {
+						console.log(err);
+					}
+				});
+				return;
 			}
-			img.src = house;
+			if (houseNum == 1) {
+				bx = 65;
+				by = 55;
+				bw = 150;
+				bh = 150;
+			} else if (houseNum == 2) {
+				bx = 75;
+				by = 75;
+				bw = 120;
+				bh = 120;
+			} else if (houseNum == 3) {
+				bx = 65;
+				by = 60;
+				bw = 145;
+				bh = 145;
+			} else if (houseNum == 4) {
+				bx = 50;
+				by = 25;
+				bw = 170;
+				bh = 170;
+			} else if (houseNum == 5) {
+				bx = 50;
+				by = 25;
+				bw = 170;
+				bh = 170;
+			} else if (houseNum == 6) {
+				bx = 30;
+				by = 5;
+				bw = 210;
+				bh = 210;
+			} else if (houseNum == 7) {
+				bx = 30;
+				by = 5;
+				bw = 215;
+				bh = 215;
+			} else if (houseNum == 8) {
+				bx = 30;
+				by = 5;
+				bw = 215;
+				bh = 215;
+			} else if (houseNum == 9) {
+				bx = 40;
+				by = 5;
+				bw = 205;
+				bh = 205;
+				bgSky = "black";
+				bgGround = "darkgrey";
+				bgCloud = "#333333";
+			} else if (houseNum == 10) {
+				bx = 40;
+				by = 0;
+				bw = 205;
+				bh = 205;
+				bgSky = "black";
+				bgGround = "darkgrey";
+				bgCloud = "#333333";
+			} else if (houseNum == 11) {
+				bx = 0;
+				by = 0;
+				bw = 0;
+				bh = 0;
+				bgSky = "black";
+				bgGround = "darkgrey";
+				bgCloud = "#333333";
+			}
+			drawHouse();
+        });
+        
+		function drawHouse() {
+			var Image = Canvas.Image;
+			var canvas = new Canvas(280, 220);
+			var ctx = canvas.getContext('2d');
+			var img = new Image();
+			
+			ctx.beginPath();
+			ctx.rect(0, 0, 280, 200);
+			ctx.fillStyle = bgSky;
+			ctx.fill();
+			//Sun
+			ctx.beginPath();
+			ctx.arc(5, 5, 40, 0, 2*Math.PI);
+			ctx.fillStyle = "yellow";
+			ctx.fill();
+			//Cloud
+			ctx.beginPath();
+			ctx.arc(150, 70, 30, 0, 2*Math.PI);
+			ctx.fillStyle = bgCloud;
+			ctx.fill();
+			
+			ctx.beginPath();
+			ctx.arc(190, 60, 40, 0, 2*Math.PI);
+			ctx.fillStyle = bgCloud;
+			ctx.fill();
+				
+			ctx.beginPath();
+			ctx.arc(230, 70, 30, 0, 2*Math.PI);
+			ctx.fillStyle = bgCloud;
+			ctx.fill();
+			//Ground
+			ctx.beginPath();
+			ctx.rect(0, 160, 300, 80);
+			ctx.fillStyle = bgGround;
+			ctx.fill();
+			//Building Shadow
+			/*ctx.beginPath();
+			ctx.rect(200, 140, 70, 30);
+			ctx.fillStyle = "#3a8c21";
+			ctx.fill();*/
+			
+			if (houseNum != 0) {
+				img.onload = function() {
+					ctx.drawImage(img, bx, by, bw, bh);
+				}
+				img.onerror = function(err) {
+					console.log(err);
+				}
+				img.src = fs.readFileSync(path.join(__dirname, 'houses/h'+houseNum+'.png'));
+			}
+			
+			/*ctx.fillStyle = "white";
+			ctx.font = 'bold 25px Arial';
+			ctx.fillText("", 110, 35);*/
+			
+			var houseImg = canvas.toBuffer();
+			
+			msg.channel.send("**"+msg.author.username+ "'s** house:", {files: [{attachment: houseImg, name: "house.png"}] });
+		}
+	}
+	if(msg.content.startsWith(prefix + "buy")) {
+		var args = msg.content.split(" ");
+		var arg = args[1];
+		var price
+		
+		getHouse(userId, function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+			if (arg == result.rows[0].house) {
+				msg.reply("You've already purchased that house.");
+				return;
+			} else {
+				buyHouse();
+			}
 		});
-			
-		ctx.beginPath();
-		ctx.arc(130,70,30,0,2*Math.PI);
-		ctx.fillStyle = "white";
-		ctx.fill();
-		//Ground
-		ctx.beginPath();
-		ctx.rect(0, 140, 300, 80);
-		ctx.fillStyle = "green";
-		ctx.fill();
-			
-		stream.on('data', function(chunk){
-		  out.write(chunk);
-		});
-			
-		msg.channel.send("**"+msg.author.username+ "'s** house:", {files: ["house.png"]});
+		function buyHouse() {
+		if (arg == undefined || /^\d+$/.test(arg) == false) {
+			msg.reply("Make sure you specify a valid house number.");
+			return;
+		}
+		if (arg == 1) {
+			price = 5000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 5000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Ooh, a Cardboard Box! Well, I guess you have to start SOMEwhere.");
+					console.log("Deducted 5000 Coins from your balance.");
+					subMoney(userId, 5000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 1, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 2) {
+			price = 10000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 10000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Man, now you can *really* fit in with all those poor people. Deducted 10,000 Coins from your balance");
+					console.log("Deducted 10000 Coins from your balance.");
+					subMoney(userId, 10000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 2, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 3) {
+			price = 15000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 15000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Time to go live in the woods by yourself! Deducted 15,000 Coins from your balance.");
+					console.log("Deducted 15000 Coins from your balance.");
+					subMoney(userId, 15000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 3, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 4) {
+			price = 20000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 20000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Wow. Your first actual house. Please don't trash it. Deducted 20,000 Coins from your balance.");
+					console.log("Deducted 20000 Coins from your balance.");
+					subMoney(userId, 20000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 4, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 5) {
+			price = 25000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 25000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Dang, you're really moving up in the world aren't you? Deducted 25,000 Coins from your balance.");
+					console.log("Deducted 25000 Coins from your balance.");
+					subMoney(userId, 25000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 5, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 6) {
+			price = 30000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 30000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Man, for an expensive house this place sure is ugly. Deducted 30,000 Coins from your balance.");
+					console.log("Deducted 30000 Coins from your balance.");
+					subMoney(userId, 30000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 6, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 7) {
+			price = 40000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 40000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("If I didn't know any better I'd say you just bought the White House's rejected brother. Deducted 40,000 Coins from your balance.");
+					console.log("Deducted 40000 Coins from your balance.");
+					subMoney(userId, 40000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 7, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 8) {
+			price = 50000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 50000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("What are you doing buying an expensive house like this? Reach for the stars! Deducted 50,000 Coins from your balance.");
+					console.log("Deducted 50000 Coins from your balance.");
+					subMoney(userId, 50000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 8, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 9) {
+			price = 65000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 65000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("When I said \"Reach for the stars\", I didn't think you'd take it literally. Deducted 65,000 Coins from your balance.");
+					console.log("Deducted 65000 Coins from your balance.");
+					subMoney(userId, 65000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 9, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 10) {
+			price = 80000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 80000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Yeesh, somewhere in the universe an alien race is ***very*** angry. Deducted 80,000 Coins from your balance.");
+					console.log("Deducted 80000 Coins from your balance.");
+					subMoney(userId, 80000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 10, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 11) {
+			price = 100000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 100000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Congrats, you've done it. You managed to convice NASA to lend you a satellite. Are you proud? Deducted 100,000 Coins from your balance.");
+					console.log("Deducted 100000 Coins from your balance.");
+					subMoney(userId, 100000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 11, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else {
+			msg.reply("Make sure you specify a valid house number.");
+			return;
+		}
+		}
+	}
+	if(msg.content.startsWith(prefix + "realestate")) {
+		msg.channel.send("```Purchasable Houses:\n[1] Cardboard Box: 5,000 Coins\n[2] Ghetto Hut: 10,000 Coins\n[3] Log Cabin: 15,000 Coins\n[4] Brick House: 20,000 Coins\n[5] Cottage: 25,000 Coins\n[6] Federal Colonial: 30,000 Coins\n[7] Neoclassical: 40,000 Coins\n[8] Art Deco: 50,000 Coins\n[9] Space Hut: 65,000 Coins\n[10] UFO: 80,000 Coins\n[11] Satellite: 100,000 Coins\n\nTo purchase a house do -buy <number>. Where <number> is the number of the house on this list. \n\nNOTE: All purchases are non-refundable.\nIf you buy a house and then buy another one to replace it, you will have to still pay full price. Even if you've bought it before.```");
+	}
+	if (msg.content.startsWith(prefix + "changelog")) {
+		var change = "Added -house, -buy, and -realestate commands. All three commands are still in BETA.";
+		msg.channel.send("```Most recent DAN update: \n\n>" + change + "```");
 	}
 	/*if (msg.content.startsWith(prefix + "social")) {
 		var args = msg.content.split(" ");
@@ -1279,6 +1679,25 @@ function getMoney(user, cb) {
             cb(err, null);
         }
         cb(null, result);
+    });
+}
+
+function getHouse(user, cb) {
+    query(`SELECT house FROM bank WHERE user_id = '${user}'`, function(err, result) {
+        if (err) {
+            cb(err, null);
+        }
+        cb(null, result);
+    });
+}
+
+function setHouse(user, num, cb) {
+    query(`UPDATE bank SET house = '${num}' WHERE user_id = '${user}'`, function(err, result) {
+        if (err)
+            cb(err, null);
+        //console.log(result);
+        cb(null, result);
+
     });
 }
 
