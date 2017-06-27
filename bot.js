@@ -29,7 +29,7 @@ var rob = new Discord.Collection();
 var social = new Discord.Collection();
 var social = new Discord.Collection();
 
-const prefix = "-";
+const prefix = "-+-";
 const beta = "beta ";
 const port = "8080";
 var post;
@@ -761,22 +761,12 @@ bot.on('message', msg => {
 			});
 		}
 	}
-	if (msg.content.startsWith("beta test")) {
-		var user = msg.author.id;
-		var curtime = moment();
-		var time;
-		var nexttime;
-		if (timeout.get(user) == undefined) {
-			time = moment();
-			nexttime = moment(time).add(10, 'seconds');
-			console.log("Key does not exist");
-			timeout.set(msg.author.id, nexttime);
-		} else {
-			time = timeout.get(user);
-			nexttime = moment(time).add(10, 'seconds');
-			var timeuntil = moment(nexttime).diff(moment(), 'seconds');
-			msg.channel.send(":clock: | Woah! The police might still be after you!\nYou must wait " + timeuntil + " seconds until you can use that command again.");
-			return;
+	if (msg.content.startsWith("bbeta test")) {
+		var jobPays = {minerHi: 275, minerLo: 200, stripperHi: 150, stripperLo: 100, waiterHi: 150, waiterLo: 100, priestHi: 75, priestLo: 30, clownHi: 50, clownLo: 20, memerHi: 16, memerLo: 5};
+		
+		for (i in jobPays) {
+			jobPays[i] *= 2;
+			console.log("hi");
 		}
 	}
 	if (msg.content.startsWith(prefix + "work")) {
@@ -786,6 +776,76 @@ bot.on('message', msg => {
 		var chance = randomInt(1, 7);
 		
 		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', 'cashier', 'ceo'];
+		
+		var jobPays = {minerHi: 275, minerLo: 200, stripperHi: 150, stripperLo: 100, waiterHi: 150, waiterLo: 100, priestHi: 75, priestLo: 30, clownHi: 50, clownLo: 20, memerHi: 16, memerLo: 5};
+		
+		var houseNum;
+		
+		getHouse(userId, function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+			houseNum = result.rows[0].house;
+			
+			if (houseNum == 1) {
+				for (i in jobPays) {
+					jobPays[i] *= 1.1;
+				}
+			}
+			if (houseNum == 2) {
+				for (i in jobPays) {
+					jobPays[i] *= 1.2;
+				}
+			}
+			if (houseNum == 3) {
+				for (i in jobPays) {
+					jobPays[i] *= 1.4;
+				}
+			}
+			if (houseNum == 4) {
+				for (i in jobPays) {
+					jobPays[i] *= 1.6;
+				}
+			}
+			if (houseNum == 5) {
+				for (i in jobPays) {
+					jobPays[i] *= 1.8;
+				}
+			}
+			if (houseNum == 6) {
+				for (i in jobPays) {
+					jobPays[i] *= 2;
+				}
+			}
+			if (houseNum == 7) {
+				for (i in jobPays) {
+					jobPays[i] *= 2.2;
+				}
+			}
+			if (houseNum == 8) {
+				for (i in jobPays) {
+					jobPays[i] *= 2.4;
+				}
+			}
+			if (houseNum == 9) {
+				for (i in jobPays) {
+					jobPays[i] *= 2.6;
+				}
+			}
+			if (houseNum == 10) {
+				for (i in jobPays) {
+					jobPays[i] *= 2.8;
+				}
+			}
+			if (houseNum == 11) {
+				for (i in jobPays) {
+					jobPays[i] *= 3;
+				}
+			} else {
+				for (i in jobPays) {
+					jobPays[i] *= 1;
+				}
+			}
 		
 		getWork(userId, function(err, result) {
 			if (err) {
@@ -814,7 +874,7 @@ bot.on('message', msg => {
 					 });
 					
 					if (job.toLowerCase() == "miner") {
-						pay = randomInt(200,275);
+						pay = randomInt(jobPays.minerLo, jobPays.minerHi);
 						if (chance == 4) {
 							msg.channel.send("You descended into the coal mines and discovered more than just coal. Your findings are worth "+pay+" Coins!");
 							addMoney(userId, pay, function(err, result) {
@@ -826,7 +886,7 @@ bot.on('message', msg => {
 							msg.channel.send("The mine collapsed before you could get much done. The boss was not too happy. No Coins today!");
 						}
 					} else if (job.toLowerCase() == "waiter") {
-						pay = randomInt(100,150);
+						pay = randomInt(jobPays.waiterLo, jobPays.waiterHi);
 						if (chance == 4 || chance == 2 || chance == 6) {
 							msg.channel.send("You were voted number one in customer service at the restaurant today! You made **"+pay+" Coins** for your efforts.");
 							addMoney(userId, pay, function(err, result) {
@@ -838,7 +898,7 @@ bot.on('message', msg => {
 							msg.channel.send("You were all over the place! Each group of people you sat a table left because you took so long. No money today.");
 						}
 					} else if (job.toLowerCase() == "stripper") {
-						pay = randomInt(100,150);
+						pay = randomInt(jobPays.stripperLo, jobPays.stripperHi);
 						if (chance == 4 || chance == 5 || chance == 1 || chance == 2) {
 							msg.channel.send("You got pinched *and* tipped. Your hips must've been on point, because you made **"+pay+" Coins** today.");
 							addMoney(userId, pay, function(err, result) {
@@ -850,7 +910,7 @@ bot.on('message', msg => {
 							msg.channel.send("You must've not bounced that booty hard enough, because your clients did *not* like your style.");
 						}
 					} else if (job.toLowerCase() == "clown") {
-						pay = randomInt(20, 50);
+						pay = randomInt(jobPays.clownLo, jobPays.clownHi);
 						if (chance != 6) {
 							msg.channel.send("You apparently kept kids entertained successfully. Even if it's a meager **"+pay+" Coins**, you should still be proud!");
 							addMoney(userId, pay, function(err, result) {
@@ -862,7 +922,7 @@ bot.on('message', msg => {
 							msg.channel.send("Uh oh, one kid started crying then they *all* started crying. I don't think you're going to be getting any money today...");
 						}
 					} else if (job.toLowerCase() == "priest") {
-						pay = randomInt(30, 75);
+						pay = randomInt(jobPays.priestLo, jobPays.priestHi);
 						people = randomInt(12, 25);
 						if (chance != 2 || chance != 5) {
 							msg.channel.send("You shouted out your wondrous words to the skies above and blessed "+people+" new people into your religion. Now you can take that **"+pay+" Coins** in donations you got.");
@@ -875,7 +935,7 @@ bot.on('message', msg => {
 							msg.channel.send("The Lord Jesus was not very pleased with your work; no one donated! Better luck next time.");
 						}
 					} else if (job.toLowerCase() == "memer") {
-						pay = randomInt(5, 16);
+						pay = randomInt(jobPays.memerLo, jobPays.memerHI);
 						people = randomInt(12, 25);
 						if (chance != 1) {
 							msg.channel.send("You made a meme and it went viral! Now you can reap the "+pay+" Coins in ad revenue.");
@@ -894,6 +954,7 @@ bot.on('message', msg => {
 				msg.channel.send(":office::alarm_clock: | You have **"+timeuntil+"** hour(s) before you can work again.");
 				return;
 			}
+		});
 		});
 	}
 	if (msg.content.startsWith(prefix + "jobs")) {
@@ -1095,18 +1156,17 @@ bot.on('message', msg => {
 			return;
 		}
 		if (arg == 1) {
-			price = 5000;
+			price = 3000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 5000) {
+				if (money < 3000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Ooh, a Cardboard Box! Well, I guess you have to start SOMEwhere.");
-					console.log("Deducted 5000 Coins from your balance.");
-					subMoney(userId, 5000, function(err, result) {
+					msg.reply("Ooh, a Cardboard Box! Well, I guess you have to start SOMEwhere. Deducted 3,000 Coins from your balance.");
+					subMoney(userId, 3000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1119,18 +1179,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 2) {
-			price = 10000;
+			price = 6000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 10000) {
+				if (money < 6000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Man, now you can *really* fit in with all those poor people. Deducted 10,000 Coins from your balance");
-					console.log("Deducted 10000 Coins from your balance.");
-					subMoney(userId, 10000, function(err, result) {
+					msg.reply("Man, now you can *really* fit in with all those poor people. Deducted 6,000 Coins from your balance");
+					subMoney(userId, 6000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1143,18 +1202,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 3) {
-			price = 15000;
+			price = 8000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 15000) {
+				if (money < 8000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Time to go live in the woods by yourself! Deducted 15,000 Coins from your balance.");
-					console.log("Deducted 15000 Coins from your balance.");
-					subMoney(userId, 15000, function(err, result) {
+					msg.reply("Time to go live in the woods by yourself! Deducted 8,000 Coins from your balance.");
+					subMoney(userId, 8000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1167,18 +1225,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 4) {
-			price = 20000;
+			price = 12000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 20000) {
+				if (money < 12000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Wow. Your first actual house. Please don't trash it. Deducted 20,000 Coins from your balance.");
-					console.log("Deducted 20000 Coins from your balance.");
-					subMoney(userId, 20000, function(err, result) {
+					msg.reply("Wow. Your first actual house. Please don't trash it. Deducted 12,000 Coins from your balance.");
+					subMoney(userId, 12000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1191,18 +1248,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 5) {
-			price = 25000;
+			price = 15000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 25000) {
+				if (money < 15000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Dang, you're really moving up in the world aren't you? Deducted 25,000 Coins from your balance.");
-					console.log("Deducted 25000 Coins from your balance.");
-					subMoney(userId, 25000, function(err, result) {
+					msg.reply("Dang, you're really moving up in the world aren't you? Deducted 15,000 Coins from your balance.");
+					subMoney(userId, 15000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1215,18 +1271,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 6) {
-			price = 30000;
+			price = 18000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 30000) {
+				if (money < 18000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Man, for an expensive house this place sure is ugly. Deducted 30,000 Coins from your balance.");
-					console.log("Deducted 30000 Coins from your balance.");
-					subMoney(userId, 30000, function(err, result) {
+					msg.reply("Man, for an expensive house this place sure is ugly. Deducted 18,000 Coins from your balance.");
+					subMoney(userId, 18000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1239,18 +1294,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 7) {
-			price = 40000;
+			price = 23000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 40000) {
+				if (money < 23000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("If I didn't know any better I'd say you just bought the White House's rejected brother. Deducted 40,000 Coins from your balance.");
-					console.log("Deducted 40000 Coins from your balance.");
-					subMoney(userId, 40000, function(err, result) {
+					msg.reply("If I didn't know any better I'd say you just bought the White House's rejected brother. Deducted 23,000 Coins from your balance.");
+					subMoney(userId, 23000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1263,18 +1317,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 8) {
-			price = 50000;
+			price = 30000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 50000) {
+				if (money < 30000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("What are you doing buying an expensive house like this? Reach for the stars! Deducted 50,000 Coins from your balance.");
-					console.log("Deducted 50000 Coins from your balance.");
-					subMoney(userId, 50000, function(err, result) {
+					msg.reply("What are you doing buying an expensive house like this? Reach for the stars! Deducted 30,000 Coins from your balance.");
+					subMoney(userId, 30000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1287,18 +1340,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 9) {
-			price = 65000;
+			price = 40000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 65000) {
+				if (money < 40000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("When I said \"Reach for the stars\", I didn't think you'd take it literally. Deducted 65,000 Coins from your balance.");
-					console.log("Deducted 65000 Coins from your balance.");
-					subMoney(userId, 65000, function(err, result) {
+					msg.reply("When I said \"Reach for the stars\", I didn't think you'd take it literally. Deducted 40,000 Coins from your balance.");
+					subMoney(userId, 40000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1311,18 +1363,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 10) {
-			price = 80000;
+			price = 50000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 80000) {
+				if (money < 50000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Yeesh, somewhere in the universe an alien race is ***very*** angry. Deducted 80,000 Coins from your balance.");
-					console.log("Deducted 80000 Coins from your balance.");
-					subMoney(userId, 80000, function(err, result) {
+					msg.reply("Yeesh, somewhere in the universe an alien race is ***very*** angry. Deducted 50,000 Coins from your balance.");
+					subMoney(userId, 50000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1335,18 +1386,17 @@ bot.on('message', msg => {
 				}
 			});
 		} else if (arg == 11) {
-			price = 100000;
+			price = 65000;
 			getMoney(userId, function(err, result) {
 				if (err) {
 					console.log(err);
 				}
 				var money = result.rows[0].money;
-				if (money < 100000) {
+				if (money < 65000) {
 					msg.reply("Sorry! You don't have enough money to purchase this house.");
 				} else {
-					msg.reply("Congrats, you've done it. You managed to convice NASA to lend you a satellite. Are you proud? Deducted 100,000 Coins from your balance.");
-					console.log("Deducted 100000 Coins from your balance.");
-					subMoney(userId, 100000, function(err, result) {
+					msg.reply("Congrats, you've done it. You managed to convice NASA to lend you a satellite. Are you proud? Deducted 65,000 Coins from your balance.");
+					subMoney(userId, 65000, function(err, result) {
 						if (err) {
 							console.log(err);
 						}
@@ -1365,7 +1415,7 @@ bot.on('message', msg => {
 		}
 	}
 	if(msg.content.startsWith(prefix + "realestate")) {
-		msg.channel.send("```Purchasable Houses:\n[1] Cardboard Box: 5,000 Coins\n[2] Ghetto Hut: 10,000 Coins\n[3] Log Cabin: 15,000 Coins\n[4] Brick House: 20,000 Coins\n[5] Cottage: 25,000 Coins\n[6] Federal Colonial: 30,000 Coins\n[7] Neoclassical: 40,000 Coins\n[8] Art Deco: 50,000 Coins\n[9] Space Hut: 65,000 Coins\n[10] UFO: 80,000 Coins\n[11] Satellite: 100,000 Coins\n\nTo purchase a house do -buy <number>. Where <number> is the number of the house on this list. \n\nNOTE: All purchases are non-refundable.\nIf you buy a house and then buy another one to replace it, you will have to still pay full price. Even if you've bought it before.```");
+		msg.channel.send("```Purchasable Houses:\n[1] Cardboard Box: 3,000 Coins\n[2] Ghetto Hut: 6,000 Coins\n[3] Log Cabin: 8,000 Coins\n[4] Brick House: 12,000 Coins\n[5] Cottage: 15,000 Coins\n[6] Federal Colonial: 18,000 Coins\n[7] Neoclassical: 23,000 Coins\n[8] Art Deco: 30,000 Coins\n[9] Space Hut: 40,000 Coins\n[10] UFO: 50,000 Coins\n[11] Satellite: 65,000 Coins\n\nTo purchase a house do -buy <number>. Where <number> is the number of the house on this list. \n\nNOTE: All purchases are non-refundable.\nIf you buy a house and then buy another one to replace it, you will have to still pay full price. Even if you've bought it before.```");
 	}
 	if (msg.content.startsWith(prefix + "changelog")) {
 		var change = "Added -house, -buy, and -realestate commands. All three commands are still in BETA.";
