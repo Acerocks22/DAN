@@ -29,7 +29,7 @@ var rob = new Discord.Collection();
 var social = new Discord.Collection();
 var social = new Discord.Collection();
 
-const prefix = "-+-";
+const prefix = "-";
 const beta = "beta ";
 const port = "8080";
 var post;
