@@ -29,7 +29,7 @@ var rob = new Discord.Collection();
 var social = new Discord.Collection();
 var social = new Discord.Collection();
 
-const prefix = "-";
+const prefix = "---";
 const beta = "beta ";
 const port = "8080";
 var post;
@@ -775,7 +775,7 @@ bot.on('message', msg => {
 		var pay;
 		var chance = randomInt(1, 7);
 		
-		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', 'cashier', 'ceo'];
+		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer'];
 		
 		var jobPays = {minerHi: 275, minerLo: 200, stripperHi: 150, stripperLo: 100, waiterHi: 150, waiterLo: 100, priestHi: 75, priestLo: 30, clownHi: 50, clownLo: 20, memerHi: 16, memerLo: 5};
 		
@@ -846,7 +846,7 @@ bot.on('message', msg => {
 					jobPays[i] *= 1;
 				}
 			}
-		});
+		
 		getWork(userId, function(err, result) {
 			if (err) {
 				console.log(err);
@@ -860,9 +860,12 @@ bot.on('message', msg => {
 			var difference = moment(date).diff(moment(paydaydate), 'minutes');
 			var timeuntil = moment(nextdate).diff(date, 'hours', true);
 			timeuntil = Math.round(timeuntil * 100) / 100;
-			
 			if (difference > 360) {
-				if (job == undefined && job.toLowerCase() != "miner" && job.toLowerCase() != "stripper" && job.toLowerCase() != "waiter" && job.toLowerCase() != "priest" && job.toLowerCase() != "clown" && job.toLowerCase() != "memer") {
+				if (job == undefined) {
+					msg.channel.send("Whoops! You didn't specify a valid job.");
+					return;
+				}
+				if (!jobs.includes(job.toLowerCase())) {
 					msg.channel.send("Whoops! You didn't specify a valid job.");
 					return;
 				} else {
@@ -954,6 +957,7 @@ bot.on('message', msg => {
 				msg.channel.send(":office::alarm_clock: | You have **"+timeuntil+"** hour(s) before you can work again.");
 				return;
 			}
+		});
 		});
 	}
 	if (msg.content.startsWith(prefix + "jobs")) {
