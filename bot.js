@@ -846,7 +846,7 @@ bot.on('message', msg => {
 					jobPays[i] *= 1;
 				}
 			}
-		
+		});
 		getWork(userId, function(err, result) {
 			if (err) {
 				console.log(err);
@@ -954,7 +954,6 @@ bot.on('message', msg => {
 				msg.channel.send(":office::alarm_clock: | You have **"+timeuntil+"** hour(s) before you can work again.");
 				return;
 			}
-		});
 		});
 	}
 	if (msg.content.startsWith(prefix + "jobs")) {
