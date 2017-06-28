@@ -999,7 +999,7 @@ bot.on('message', msg => {
             
             console.log(houseNum);
             
-            if (result.rows[0].house == 0 || houseNum == undefined) {
+            if (result.rows[0].house == undefined) {
 				console.log("Nothing there.");
 				msg.reply("Bought you some land. Type -house again to see it!");
 				setHouse(userId, 0, function(err, result) {
