@@ -1544,7 +1544,7 @@ bot.on('message', msg => {
 						fields: [
 							{
 							name: 'Social Stream Error',
-							value: "Only the owner of the server can open a Social Stream"
+							value: "Only the owner of the server can close a Social Stream"
 							},
 						]
 					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
