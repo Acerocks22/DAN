@@ -1535,6 +1535,21 @@ bot.on('message', msg => {
 			}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
 		}
 		if (args[1] == "close" && social.get(msgGuild) != undefined) {
+			if (msg.author.id != msg.guild.ownerID) {
+				setTimeout(function() {
+						msg.delete();
+					}, 3000);
+					msg.channel.send("", {embed: {
+						color: 14357524,
+						fields: [
+							{
+							name: 'Social Stream Error',
+							value: "Only the owner of the server can open a Social Stream"
+							},
+						]
+					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
+					return;
+			}
 			social.delete(msgGuild);
 			msg.channel.send("", {embed: {
 				color: 12893700,
