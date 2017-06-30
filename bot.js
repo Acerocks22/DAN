@@ -27,7 +27,6 @@ var timeout = new Discord.Collection();
 var slots = new Discord.Collection();
 var rob = new Discord.Collection();
 var social = new Discord.Collection();
-var social = new Discord.Collection();
 
 const prefix = "-";
 const beta = "beta ";
@@ -775,7 +774,7 @@ bot.on('message', msg => {
 		var pay;
 		var chance = randomInt(1, 7);
 		
-		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer'];
+		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', ''];
 		
 		var jobPays = {minerHi: 275, minerLo: 200, stripperHi: 150, stripperLo: 100, waiterHi: 150, waiterLo: 100, priestHi: 75, priestLo: 30, clownHi: 50, clownLo: 20, memerHi: 16, memerLo: 5};
 		
@@ -1433,15 +1432,136 @@ bot.on('message', msg => {
 			
 		}
 	}*/
-	/*if (msg.content.startsWith(prefix + "social")) {
-		//console.log(bot.guilds.values());
-		message = msg;
+	if (msg.content.startsWith(prefix + "social")) {
 		user = msg.author.username;
 		server = msg.guild.name;
 		var args = msg.content.split(" ");
-		var args = args[0] + "  ";
-		post = msg.content.slice(msg.content.indexOf('.giraffe') + args.length);
-		if (!post) {
+		message = args[0] + args[1] + "  ";
+		post = msg.content.slice(message.length);
+		//console.log(msg.guild.ownerID);
+		var msgGuild = msg.guild.id;
+		var streamChnl = msg.channel.id;
+		if (args[1] == "open") {
+			if (msg.author.id != msg.guild.ownerID) {
+				setTimeout(function() {
+						msg.delete();
+					}, 3000);
+					msg.channel.send("", {embed: {
+						color: 14357524,
+						fields: [
+							{
+							name: 'Social Stream Error',
+							value: "Only the owner of the server can open a Social Stream"
+							},
+						]
+					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
+					return;
+			}
+			if (social.get(msgGuild) == undefined) {
+				social.set(msgGuild, streamChnl);
+				msg.channel.send("", {embed: {
+					color: 16774912,
+					fields: [
+						{
+						name: 'Social Stream',
+						value: "Opened"
+						},
+					]
+				}});
+			} else {
+				if (social.get(msgGuild) == msg.channel.id) {
+					msg.channel.send("", {embed: {
+						color: 14357524,
+						fields: [
+							{
+							name: 'Social Stream',
+							value: "is already open here"
+							},
+						]
+					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
+				} else {
+					setTimeout(function() {
+						msg.delete();
+					}, 3000);
+					var chnlId = social.get(msgGuild);
+					msg.channel.send("", {embed: {
+						color: 14357524,
+						fields: [
+							{
+							name: 'Social Stream',
+							value: "is open on "+msg.guild.channels.get(chnlId)
+							},
+						]
+					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
+				}
+			}
+		}
+		if (args[1] == "send" && social.get(msgGuild) != undefined) {
+			social.forEach(function(channel, guild) {
+				if (channel == msg.channel.id) {
+					bot.channels.get(channel).send("", {embed: {
+						color: 16774912,
+						fields: [
+							{
+							name: 'Sent your message to Social Stream: ',
+							value: "\""+post+"\""
+							},
+						]
+					}});
+				} else {
+					bot.channels.get(channel).send("", {embed: {
+						color: 16774912,
+						fields: [
+							{
+							name: 'Message from Social Stream:',
+							value: msg.author.username+" says \""+post+"\""
+							},
+						]
+					}});
+				}
+			});
+		} else if (args[1] == "send" && social.get(msgGuild) == undefined) {
+			setTimeout(function() {
+				msg.delete();
+			}, 3000);
+			msg.channel.send("", {embed: {
+				color: 14357524,
+				fields: [
+					{
+					name: 'A Social Stream has not been opened yet.',
+					value: "Have the owner do \"-social open\" in a channel."
+					},
+				]
+			}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
+		}
+		if (args[1] == "close" && social.get(msgGuild) != undefined) {
+			social.delete(msgGuild);
+			msg.channel.send("", {embed: {
+				color: 12893700,
+				fields: [
+					{
+					name: 'Social Stream',
+					value: "Closed"
+					},
+				]
+			}});
+		} else if (args[1] == "close" && social.get(msgGuild) == undefined) {
+			msg.channel.send("", {embed: {
+				color: 12893700,
+				fields: [
+					{
+					name: 'You have to open a Social Stream',
+					value: "in order to close one"
+					},
+				]
+			}});
+		}
+		if (args[1] == undefined) {
+			return;
+		}
+	}
+		
+		/*if (!post) {
 			msg.channel.send("Send a valid message.");
 			return;
 		} else if (post.toLowerCase().includes("fag") || post.toLowerCase().includes("fuck you") || post.toLowerCase().includes("cunt") || post.toLowerCase().includes("kys") || post.toLowerCase().includes("kill yourself")) {
@@ -1455,39 +1575,8 @@ bot.on('message', msg => {
 			var postchannel2;
 			var value;
 			
-			console.log()
 			
-			for (i = 0; i < bot.guilds.values().channels.length; i++) {
-				value = windowArray[index];
-				if (value.substring(0, value.length) === "bot") {
-					// You've found it, the full text is in `value`.
-					// So you might grab it and break the loop, although
-					// really what you do having found it depends on
-					// what you need.
-					var result = value;
-					console.log(result);
-					break;
-				}
-			}
-			
-			function isSub(sub) {
-				return sub.indexOf("bot") >= 0
-			}
-						
-			for (const guild of bot.guilds.values()) {
-				//console.log(guild.channels.find("name", "bot"));
-				console.log(guild.channels.find("name", a => {return a.includes("bot")}));
-				
-				if (guild.channels.find("name", "bot_commands")) {
-					postchannel = guild.channels.find("name", "bot_commands");
-					postchannel.send("```\nMSG from " + user + " in the server \"" + server + "\":\n\"" + post  + "\"\n```");
-				} else if (guild.channels.find("name", "bot_spam")) {
-					postchannel = guild.channels.find("name", "bot_spam");
-					postchannel.send("```\nMSG from " + user + " in the server \"" + server + "\":\n\"" + post  + "\"\n```");
-				}
-			}
-		}, 3000);
-	}*/
+		}, 3000);*/
 	/*if (msg.content.startsWith(prefix + "rob")) {
 		var target = msg.mentions.users.first().id;
 		if (target == undefined) {
