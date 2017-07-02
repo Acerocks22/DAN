@@ -1445,7 +1445,8 @@ bot.on('message', msg => {
 		var msgGuild = msg.guild.id;
 		var streamChnl = msg.channel.id;
 		if (args[1] == "open") {
-			if (msg.author.id != msg.guild.ownerID || msg.member.hasPermission("MANAGE_MESSAGES") == false) {
+			if (msg.member.hasPermission("MANAGE_MESSAGES") == false) {
+				console.log("NAH");
 				setTimeout(function() {
 						msg.delete();
 					}, 3000);
