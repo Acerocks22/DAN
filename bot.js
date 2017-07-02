@@ -28,7 +28,7 @@ var slots = new Discord.Collection();
 var rob = new Discord.Collection();
 var social = new Discord.Collection();
 
-const prefix = "-";
+const prefix = "---";
 const beta = "beta ";
 const port = "8080";
 var post;
@@ -1445,7 +1445,7 @@ bot.on('message', msg => {
 		var msgGuild = msg.guild.id;
 		var streamChnl = msg.channel.id;
 		if (args[1] == "open") {
-			if (msg.author.id != msg.guild.ownerID) {
+			if (msg.author.id != msg.guild.ownerID || msg.member.hasPermission("MANAGE_MESSAGES") == false) {
 				setTimeout(function() {
 						msg.delete();
 					}, 3000);
@@ -1454,7 +1454,7 @@ bot.on('message', msg => {
 						fields: [
 							{
 							name: 'Social Stream Error',
-							value: "Only the owner of the server can open a Social Stream"
+							value: "Only the owner or a mod of the server can open a Social Stream"
 							},
 						]
 					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
