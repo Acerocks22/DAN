@@ -13,6 +13,7 @@ var moment = require('moment');
 moment().format();
 var Canvas = require('canvas');
 var fs = require('fs');
+var urban = require('urban');
 
 var acronym = require("acronym");
 var path = require("path");
@@ -1741,6 +1742,18 @@ bot.on('message', msg => {
 			}
 		}
 	}*/
+	if (msg.content.startsWith(prefix + "ud")) {
+		var query = msg.content.split(" ")[1];
+		
+		if (query == undefined) {
+			msg.channel.send("You didn't define a valid search term.");
+		} else {
+			var search = urban(query);
+			search.first(function(json) {
+				msg.channel.send("Word: **"+query+"**\nDefinition: **"+json.definition+"**");
+			});
+		}
+	}
 });
 
 function randomInt(low, high) {
