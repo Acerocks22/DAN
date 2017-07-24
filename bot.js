@@ -775,7 +775,7 @@ bot.on('message', msg => {
 		var pay;
 		var chance = randomInt(1, 7);
 		
-		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', 'chef', 'hobo', 'robber'];
+		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', 'chef', 'hobo', 'robber', 'cop'];
 		
 		var jobPays = {
 			minerHi: 450,
