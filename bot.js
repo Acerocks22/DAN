@@ -775,9 +775,28 @@ bot.on('message', msg => {
 		var pay;
 		var chance = randomInt(1, 7);
 		
-		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', ''];
+		var jobs = ['miner', 'stripper', 'waiter', 'priest', 'clown', 'memer', 'chef', 'hobo', 'robber'];
 		
-		var jobPays = {minerHi: 275, minerLo: 200, stripperHi: 150, stripperLo: 100, waiterHi: 150, waiterLo: 100, priestHi: 75, priestLo: 30, clownHi: 50, clownLo: 20, memerHi: 16, memerLo: 5};
+		var jobPays = {
+			minerHi: 450,
+			minerLo: 300,
+			stripperHi: 150,
+			stripperLo: 100,
+			waiterHi: 150,
+			waiterLo: 100,
+			priestHi: 75,
+			priestLo: 30,
+			clownHi: 50,
+			clownLo: 20,
+			memerHi: 16,
+			memerLo: 5,
+			chefHi: 170,
+			chefLo: 80,
+			hoboHi: 10,
+			hoboLo: 2,
+			copHi: 300,
+			copLo: 200
+		};
 		
 		var houseNum;
 		
@@ -941,7 +960,7 @@ bot.on('message', msg => {
 						pay = randomInt(jobPays.memerLo, jobPays.memerHI);
 						people = randomInt(12, 25);
 						if (chance != 1) {
-							msg.channel.send("You made a meme and it went viral! Now you can reap the "+pay+" Coins in ad revenue.");
+							msg.channel.send("You made a meme and it went viral! Now you can reap the **"+pay+" Coins** in ad revenue.");
 							addMoney(userId, pay, function(err, result) {
 								if (err) {
 									console.log(err);
@@ -949,6 +968,52 @@ bot.on('message', msg => {
 							});
 						} else {
 							msg.channel.send("That meme and this job was a joke. You made absolutely nothing.");
+						}
+					} else if (job.toLowerCase() == "chef") {
+						pay = randomInt(jobPays.chefLo, jobPays.chefHi);
+						if (chance != 1 || chance != 6 || chance != 3) {
+							msg.channel.send("Your food is mega overpriced, but the customers love it! Who would pay **"+pay+" Coins** for food though?");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("Someone left the stove on, everything is gross and burned! Your customers say they're never returning.");
+						}
+					} else if (job.toLowerCase() == "hobo") {
+						pay = randomInt(jobPays.hoboLo, jobPays.hoboHi);
+						if (chance != 2) {
+							msg.channel.send("You might be poor, but you made **"+pay+" Coins** from walking the streets and begging for cash.");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("You begged to the wrong people and got mugged in a back alley way. You lost **"+pay+" Coins**.");
+							subMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						}
+					} else if (job.toLowerCase() == "cop") {
+						pay = randomInt(jobPays.copLo, jobPays.copHi);
+						if (chance == 6 || chance == 3) {
+							msg.channel.send("You stopped the bad guys and saved the day! Here's **"+pay+" Coins** in appreciation.");
+							addMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
+						} else {
+							msg.channel.send("Something went wrong and you got shot. A lot. You had to pay **"+pay+" Coins** to cover your medical bill.");
+							subMoney(userId, pay, function(err, result) {
+								if (err) {
+									console.log(err);
+								}
+							});
 						}
 					}
 					return;
@@ -961,7 +1026,7 @@ bot.on('message', msg => {
 		});
 	}
 	if (msg.content.startsWith(prefix + "jobs")) {
-		msg.channel.send("```\nAVAILABLE JOBS:\n-Miner\n-Waiter\n-Stripper\n-Clown\n-Priest\n-Memer\nFORMAT: -work <job>```");
+		msg.channel.send("```\nAVAILABLE JOBS:\n-Miner\n-Cop\n-Waiter\n-Stripper\n-Chef\n-Clown\n-Priest\n-Memer\n-Hobo\n\nFORMAT: -work <job>```");
 	}
 	if (msg.content.startsWith(prefix + "top")) {
 		getTop(function(err, result) {
