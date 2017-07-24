@@ -28,6 +28,7 @@ var timeout = new Discord.Collection();
 var slots = new Discord.Collection();
 var rob = new Discord.Collection();
 var social = new Discord.Collection();
+var horseBets = new Discord.Collection();
 
 const prefix = "-";
 const beta = "beta ";
@@ -331,7 +332,7 @@ bot.on('message', msg => {
 		msg.channel.send(target + ", " + msg.author + " has challenged you to a duel! Accept the duel with `" + prefix + "accept`.");
 		
 		const collector = msg.channel.createCollector(
-			m => m.content.startsWith(prefix + "accept") && msg.author.id == targetid,
+			m => m.content.startsWith(prefix + "accept"),
 			{ maxMatches: 1, time: 30000 }
 		);
 		collector.on('collect', (msg, collected) => {
@@ -361,7 +362,7 @@ bot.on('message', msg => {
 			}
 			msg.channel.send("```"+data+"```");
 		});
-	}
+	}/*
 	if (msg.content.startsWith(prefix + "horses")) {
 		var lane1 = ': =========:horse_racing: : Jim';
 		var lane2 = ': =========:horse_racing: : Brad';
@@ -377,6 +378,9 @@ bot.on('message', msg => {
 		var move4;
 		var msgid = 12;
 		var move;
+		var champ;
+		
+		var users = [];
 
 		function replaceIndex(string, at, repl) {
 		   return string.replace(/\S/g, function(match, i) {
@@ -415,23 +419,53 @@ bot.on('message', msg => {
 					place4 -= 1;
 				}
 				
-				msg.channel.fetchMessage(msgid).then(message => {message.edit("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4);});
+				msg.channel.fetchMessage(msgid).then(message => {message.edit("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4+"\nPlace your bets with -bet <horse name>.");});
+				
+				const collector = msg.channel.createMessageCollector(
+					m => m.content.startsWith(prefix + "bet"),
+					{ maxMatches: 5000 }
+				);
+				collector.on('collect', (msg, collected) => {
+					args = msg.content.split(" ");
+					horse = args[1];
+					horseBets.set(msg.author.id, horse);
+					horseBets.set('sausage', 'sausage');
+				});
+				collector.on('end', collected => {
+					horseBets.forEach(function(bet, id, horseBets) {
+						users.push(msg.guild.members.get(id).username);
+							console.log(users);
+						if (bet) {
+						}
+					});
+					msg.channel.send("");
+					horseBets.clear();
+				});
+				
 				if (place1 == 2) {
 					msg.channel.send(":tada: **Jim wins the race!** :tada:");
 					clearInterval(move);
+					champ = "Jim";
+					collector.stop();
 				} else if (place2 == 2) {
 					msg.channel.send(":tada: **Brad wins the race!** :tada:");
 					clearInterval(move);
+					champ = "Brad";
+					collector.stop();
 				} else if (place3 == 2) {
 					msg.channel.send(":tada: **Kevin wins the race!** :tada:");
 					clearInterval(move);
+					champ = "Kevin";
+					collector.stop();
 				} else if (place4 == 2) {
 					msg.channel.send(":tada: **Carl wins the race!** :tada:");
 					clearInterval(move);
+					champ = "Carl";
+					collector.stop();
 				}
 			}, 1000);
 		}
-	}
+	}*/
 	if (msg.content.startsWith(prefix + "zodiac")) {
 		var args = msg.content.split(' ');
 		if (msg.content.includes("/")) {
@@ -1000,7 +1034,7 @@ bot.on('message', msg => {
 						}
 					} else if (job.toLowerCase() == "cop") {
 						pay = randomInt(jobPays.copLo, jobPays.copHi);
-						if (chance == 6 || chance == 3) {
+						if (chance == 6 || chance == 1) {
 							msg.channel.send("You stopped the bad guys and saved the day! Here's **"+pay+" Coins** in appreciation.");
 							addMoney(userId, pay, function(err, result) {
 								if (err) {
@@ -1809,13 +1843,18 @@ bot.on('message', msg => {
 	}*/
 	if (msg.content.startsWith(prefix + "ud")) {
 		var query = msg.content.split(" ")[1];
+		var query1 = msg.content.slice(msg.content.indexOf(prefix+'ud') + 4);
 		
-		if (query == undefined) {
+		if (query1 == undefined) {
 			msg.channel.send("You didn't define a valid search term.");
 		} else {
-			var search = urban(query);
+			var search = urban(query1);
 			search.first(function(json) {
-				msg.channel.send("Word: **"+query+"**\nDefinition: **"+json.definition+"**");
+				if (json == undefined) {
+					msg.channel.send("That word can't be found! Try something else.");
+				} else {
+					msg.channel.send("Word: **"+query+"**\nDefinition: **"+json.definition+"**");
+				}
 			});
 		}
 	}
