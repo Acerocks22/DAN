@@ -38,6 +38,8 @@ var user;
 var server;
 var message;
 
+var streamList = [];
+
 var totalUserCount;
 totalUserCount = bot.users.size;
 
@@ -264,7 +266,7 @@ bot.on('message', msg => {
 		msg.author.send("**Want me on your server?**\nClick this link:\nhttps://discordapp.com/oauth2/authorize?client_id=313303655656849410&scope=bot&permissions=201452608");
 	}
 	if (msg.content.startsWith(prefix + "help")) {
-		msg.author.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.\n-ow <battle tag>\n\t# Get info about your Overwatch profile.\n-ftoc <number>\n\t# Convert Farenheit to Celsius\n-ctof <number>\n\t# Convert Celsius to Farenheit\n-join\n\t# Join the DAN's Support Server\n====SOCIAL STREAM====\n-social open\n\t# Start a Social Stream (Server-Owner only command)\n-social close\n\t# Close a Social Stream (Server-Owner only command)\n-social send <message>\n\t# Send a message to other servers.\n====MONEY====\n-top <number>\n\t# Check the leaderboards and see who's the richest!\n-payday\n\t# Collect your daily paycheck!\n-balance\n\t# Check your bank account balance.\n-work <job>\n\t# Work a job for some extra Coins. Use -jobs to check the available jobs.\n-slots\n\t# Test your luck, pull the lever.\n-heist\n\t# Attempt a bank heist!\n-house\n\t# Check on your house.\n-realestate\n\t# Check what's up for sale!\n-buy <number>\n\t# Purchase a house.```");
+		msg.author.send("`Full Command List`\n```cs\n-ping\n\t# Ping the bot.\n-who\n\t# Find out info about the bot.\n-insult <user>\n\t# Insult someone.\n-conch <question>\n\t# Ask the magic conch shell a question.\n-spooky <user>\n\t# Check how spooky someone is.\n-avatar <user>\n\t# Get the avatar of someone.\n-slap <user>\n\t# Slap someone!\n-add\n\t# Add this bot to your own server.\n-duel <user>\n\t# Duel someone in the server.\n-ascii <text>\n\t# Convert text into ASCII lettering.\n-horses\n\t# Bet on some horse racing!\n-zodiac <month INT> <day INT>\n\t# Get info about your zodiac sign.\n-ow <battle tag>\n\t# Get info about your Overwatch profile.\n-ftoc <number>\n\t# Convert Farenheit to Celsius\n-ctof <number>\n\t# Convert Celsius to Farenheit\n-join\n\t# Join the DAN's Support Server\n====SOCIAL STREAM====\n-social open\n\t# Start a Social Stream (Server-Owner only command)\n-social close\n\t# Close a Social Stream (Server-Owner only command)\n-social send <message>\n\t# Send a message to other servers.\n-streamlist\n\t# Check how many servers have a Social Stream open.\n====MONEY====\n-top <number>\n\t# Check the leaderboards and see who's the richest!\n-payday\n\t# Collect your daily paycheck!\n-balance\n\t# Check your bank account balance.\n-work <job>\n\t# Work a job for some extra Coins. Use -jobs to check the available jobs.\n-slots\n\t# Test your luck, pull the lever.\n-heist\n\t# Attempt a bank heist!\n-house\n\t# Check on your house.\n-realestate\n\t# Check what's up for sale!\n-buy <number>\n\t# Purchase a house.```");
 		msg.channel.send("The command list has been DMed to you. :)");
 	}
 	if (msg.content.startsWith(prefix + "slap")) {
@@ -1554,6 +1556,17 @@ bot.on('message', msg => {
 			
 		}
 	}*/
+	if (msg.content.startsWith(prefix + "streamlist")) {
+		var list = "";
+		for(var i = 0; i < streamList.length; i++) {
+			list += "> " + streamList[i] + "\n";
+		}
+		if (list === "") {
+			msg.channel.send("**0** servers open in Social Stream.");
+		} else {
+			msg.channel.send("**"+streamList.length+"** servers open in Social Stream:\n```"+list+"```");
+		}
+	}
 	if (msg.content.startsWith(prefix + "social")) {
 		var filter = ["nigger", "nigga", "n igga", "ni gga", "nig ga", "nigg a", "n igger", "ni gger", "nig ger", "nigg er", "nigge r", "n!gga", "n!gger", "n!gg@", "n!gg3r", "nigg3r", "nigg@"];
 		user = msg.author.username;
@@ -1568,7 +1581,6 @@ bot.on('message', msg => {
 		var streamChnl = msg.channel.id;
 		if (args[1] == "open") {
 			if (msg.member.hasPermission("MANAGE_MESSAGES") == false) {
-				console.log("NAH");
 				setTimeout(function() {
 						msg.delete();
 					}, 3000);
@@ -1583,6 +1595,7 @@ bot.on('message', msg => {
 					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
 					return;
 			}
+			streamList.push(msg.guild.name);
 			if (social.get(msgGuild) == undefined) {
 				social.set(msgGuild, streamChnl);
 				msg.channel.send("", {embed: {
