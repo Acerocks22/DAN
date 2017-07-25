@@ -38,6 +38,9 @@ var user;
 var server;
 var message;
 
+var totalUserCount;
+totalUserCount = bot.users.size;
+
 /*var channel;
 var adjectives = [];
 var nouns = [];
@@ -45,7 +48,8 @@ var verbs = [];*/
 
 bot.on("ready", () => {
     console.log(`Ready to server in ${bot.channels.size} channels on ${bot.guilds.size} servers, for a total of ${bot.users.size} users.`);
-    bot.user.setGame("with friends | -help");
+    bot.user.setGame("with "+bot.users.size +" friends | -help");
+    totalUserCount = bot.users.size;
 });
 
 bot.on('message', msg => {
@@ -1894,6 +1898,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.get('/ajax', function(req, res) {
+    res.send({
+		totalUsers: totalUserCount
+	});
+});
 
 app.server.listen(process.env.PORT || 4000);
 console.log('DANbot is listening on port ' + app.server.address().port + '!');

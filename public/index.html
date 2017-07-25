@@ -10,9 +10,17 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 </head>
 <body>
+	<script>
+		$(function() {
+			$.get('/ajax', function(res) {
+				$('#userCount').text(res.totalUsers + " users.");
+			});
+		});
+	</script>
 	<div class="splash">
 		<h3>D.A.N.</h3>
 		<p>The bot made for <strong>fun.</strong></p>
+		<p>Currently serving <strong id="userCount"></strong></p>
 	</div>
 	<div class="content">
 		> <span>Info</span>
@@ -21,16 +29,43 @@
 			When it comes to this bot, the only commands you'll be getting are <del>useless</del> fun ones.
 			Whether you want to throw an insult at a mate, or ask the Magic Conch a question, this bot is sure to fit your needs.
 		</p>
-		> Commands
+		> General
 		<ul>
-			<li><span>.ping</span> - Ping the bot.</li>
-			<li><span>.help</span> - Display a list of available commands.</li>
-			<li><span>.who</span> - Get info on the bot.</li>
-			<li><span>.conch</span> - Ask the magic conch a question.</li>
-			<li><span>.insult</span> - Insult someone on the server like a 6 year old.</li>
-			<li><span>.spooky</span> - Check how spooky someone is.</li>
-			<li><span>.slap</span> - Slap someone on the server.</li>
-			<li><span>.add</span> - Add the bot to your server.</li>
+			<li><span>-ping</span> - Ping the bot.</li>
+			<li><span>-help</span> - Display a list of available commands.</li>
+			<li><span>-who</span> - Get info on the bot.</li>
+			<li><span>-conch</span> - Ask the magic conch a question.</li>
+			<li><span>-insult</span> - Insult someone on the server like a 6 year old.</li>
+			<li><span>-spooky</span> - Check how spooky someone is.</li>
+			<li><span>-slap</span> - Slap someone on the server.</li>
+			<li><span>-duel</span> - Duel someone in the server.</li>
+			<li><span>-ascii &lt;text&gt;</span> - Convert text into ASCII lettering.</li>
+			<li><span>-horses</span> - Check out the horse races! [COMMAND IS DOWN FOR TIME BEING]</li>
+			<li><span>-zodiac &lt;month INT&gt; &lt;day INT&gt;</span> - Get info about your zodiac sign.</li>
+			<li><span>-ow &lt;battle tag&gt;</span> - Get info about your Overwatch profile.</li>
+			<li><span>-ftoc &lt;number&gt;</span> - Convert Farenheit to Celcius.</li>
+			<li><span>-ctof &lt;number&gt;</span> - Convert Celcius to Farenheit.</li>
+			<li><span>-add</span> - Add the bot to your server.</li>
+			<li><span>-join</span> - Join D.A.N.'s support server.</li>
+		</ul>
+		> Social Stream
+		<ul>
+			<li><span>-social open</span> - Start a Social Stream. (Usable by Role with Manage Messages Permission ONLY)</li>
+			<li><span>-social close</span> - Close a Social Stream. (Usable by Role with Manage Messages Permission ONLY)</li>
+			<li><span>-social send</span> - Send a message to other servers through the Social Stream.</li>
+		</ul>
+		> Economy
+		<ul>
+			<li><span>-top &lt;number&gt;</span> - Check the leaderboards and see who's the richest!</li>
+			<li><span>-payday</span> - Collect your daily paycheck,</li>
+			<li><span>-balance</span> - Check your bank account balance.</li>
+			<li><span>-work &lt;job&gt;</span> - Work a job for some extra Coins. Use -jobs to check all available jobs.</li>
+			<li><span>-jobs</span> - Check all available jobs.</li>
+			<li><span>-slots</span> - Test your luck, and pull the lever.</li>
+			<li><span>-heist</span> - Attempt a bank heist.</li>
+			<li><span>-house</span> - Check on your house.</li>
+			<li><span>-realestate</span> - Check what houses are up for sale!</li>
+			<li><span>-buy &lt;number&gt;</span> - Purchase a house. Use -realestate to check available houses.</li>
 		</ul>
 	</div>
 </body>
