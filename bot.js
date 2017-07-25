@@ -300,7 +300,9 @@ bot.on('message', msg => {
 		if(target == undefined) {
 			msg.reply("Make sure you specify a target!");
 			return;
-			
+		} else if(target.id == msg.author.id) {
+			msg.reply("You can't duel yourself!");
+			return;
 		}
 		
 		var battlemsg = [
@@ -340,7 +342,11 @@ bot.on('message', msg => {
 			{ maxMatches: 1, time: 30000 }
 		);
 		collector.on('collect', (msg, collected) => {
-			msg.channel.send(battlemsg);
+			if (msg.author.id == target.id) {
+				msg.channel.send(battlemsg);
+			} else {
+				return;
+			}
 		});
 		collector.on('end', collected => {
 			if (collected.size <= 0) {
