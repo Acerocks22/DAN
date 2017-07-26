@@ -14,6 +14,8 @@ moment().format();
 var Canvas = require('canvas');
 var fs = require('fs');
 var urban = require('urban');
+var YodaSpeak = require('yoda-speak');
+var yoda = new YodaSpeak("JoyWrItwf0msh4CsAQnOQvfQBjGSp1tXrrNjsnQ6u6NhddvO6T");
 
 var acronym = require("acronym");
 var path = require("path");
@@ -1896,6 +1898,18 @@ bot.on('message', msg => {
 				}
 			});
 		}
+	}
+	if (msg.content.startsWith(prefix + "yoda")) {
+		var arg = msg.content.slice(msg.content.indexOf(prefix+"yoda") + 6);
+		
+		yoda.convert(arg,
+		function(err, result) {
+			if (!err) {
+				msg.channel.send(result.toString());
+			} else {
+				console.log(err);
+			}
+		})
 	}
 });
 
