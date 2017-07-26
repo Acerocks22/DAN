@@ -1902,6 +1902,10 @@ bot.on('message', msg => {
 	if (msg.content.startsWith(prefix + "yoda")) {
 		var arg = msg.content.slice(msg.content.indexOf(prefix+"yoda") + 6);
 		
+		if (arg == undefined) {
+			msg.reply("Please specify a valid message.");
+		}
+		
 		yoda.convert(arg,
 		function(err, result) {
 			if (!err) {
