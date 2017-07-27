@@ -1999,11 +1999,33 @@ bot.on('message', msg => {
 				console.log(reason);
 			});
 	}
+	if (msg.content.startsWith(prefix + "videocall")) {
+		var id = makeId();
+		url = `https://appear.in/${id}`;
+		var target = msg.mentions.users.first();
+		
+		if (target == undefined) {
+			msg.channel.send(msg.author.username+" has open a videochat at "+url);
+		} else {
+			target.send(msg.author.username+" wants to videochat with you! Join it at "+url);
+		}
+	}
 });
 
 function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
 };
+
+function makeId() {
+	var text = "";
+	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+	for (var i = 0; i < 5; i++) {
+		text += possible.charAt(Math.floor(Math.random() * possible.length));
+	}
+	
+	return text;
+}
 
 function isEven(n) {
    return n % 2 == 0;
