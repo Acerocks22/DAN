@@ -1922,6 +1922,11 @@ bot.on('message', msg => {
 	if (msg.content.startsWith(prefix + "pubg")) {
 		var nick = msg.content.slice(msg.content.indexOf(prefix + "pubg") + 6);
 		
+		if (nick == undefined) {
+			msg.reply("Make sure you specify a nickname.");
+			return;
+		}
+		
 		api.profile.byNickname(nick)
 			.then((data) => {
 				var stats = data["Stats"][0].Stats;
