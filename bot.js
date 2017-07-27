@@ -16,6 +16,10 @@ var fs = require('fs');
 var urban = require('urban');
 var YodaSpeak = require('yoda-speak');
 var yoda = new YodaSpeak("JoyWrItwf0msh4CsAQnOQvfQBjGSp1tXrrNjsnQ6u6NhddvO6T");
+const {PubgAPI, PubgAPIErrors} = require('pubg-api-redis');
+const api = new PubgAPI({
+  apikey: '0ab2b8a9-599d-44b1-93bf-f5ef84680935'
+});
 
 var acronym = require("acronym");
 var path = require("path");
@@ -1914,6 +1918,81 @@ bot.on('message', msg => {
 				console.log(err);
 			}
 		})
+	}
+	if (msg.content.startsWith(prefix + "pubg")) {
+		var nick = msg.content.slice(msg.content.indexOf(prefix + "pubg") + 6);
+		
+		api.profile.byNickname(nick)
+			.then((data) => {
+				var stats = data["Stats"][0].Stats;
+				var totalRounds = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalRounds += Number(JSON.stringify(data["Stats"][i].Stats[3].ValueInt));
+				}
+				var totalWins = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalWins += Number(JSON.stringify(data["Stats"][i].Stats[4].ValueInt));
+				}
+				var totalLosses = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalLosses += Number(JSON.stringify(data["Stats"][i].Stats[8].ValueInt));
+				}
+				var totalKills = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalKills += Number(JSON.stringify(data["Stats"][i].Stats[21].ValueInt));
+				}
+				var totalAssists = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalAssists += Number(JSON.stringify(data["Stats"][i].Stats[22].ValueInt));
+				}
+				var totalHeadshots = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalHeadshots += Number(JSON.stringify(data["Stats"][i].Stats[25].ValueInt));
+				}
+				var totalMoveDistance = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalMoveDistance += Math.floor(Number(JSON.stringify(data["Stats"][i].Stats[41].ValueDec)));
+				}
+				var totalWalkDistance = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalWalkDistance += Math.floor(Number(JSON.stringify(data["Stats"][i].Stats[39].ValueDec)));
+				}
+				var totalRideDistance = 0;
+				for (var i = 0; i < data["Stats"].length; i++) {
+					totalRideDistance += Math.floor(Number(JSON.stringify(data["Stats"][i].Stats[40].ValueDec)));
+				}
+				console.log(totalWalkDistance);
+				msg.channel.send("", {embed: {
+					color: 1352973,
+					author: {
+						name: 'PUBG stats for ' + nick + '.'
+					},
+					description: '--------------\n',
+					fields: [
+						{
+						name: 'Kill Stats: ',
+						value: '**Total Kills:** '+totalKills+'\n**Total Assists:** '+totalAssists+'\n**Total Headshots:** '+totalHeadshots
+						},
+						{
+						name: 'Round Stats: ',
+						inline: true,
+						value: '**Total Rounds:** '+totalRounds+'\n**Total Wins:** '+totalWins+'\n**Total Losses:** '+totalLosses
+						},
+						{
+						name: 'Movement Stats: ',
+						inline: true,
+						value: '**Total Distance Moved:** '+totalMoveDistance+'km\n**Total Walk Distance:** '+totalWalkDistance+'km\n**Total Ride DIstance:** '+totalRideDistance+'km'
+						}
+					],
+					thumbnail: {
+						url: data['Avatar']
+					}
+				}});
+			})
+			.catch(function(reason) {
+				msg.channel.send("That profile does not exist!");
+				console.log(reason);
+			});
 	}
 });
 
