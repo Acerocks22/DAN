@@ -1714,6 +1714,10 @@ bot.on('message', msg => {
 					}}).then((sent) => {setTimeout(() =>{sent.delete()}, 3000)});
 					return;
 			}
+			var index = streamList.indexOf(msg.guild.name);
+			if (index > -1) {
+				streamList.splice(index, 1);
+			}
 			social.delete(msgGuild);
 			msg.channel.send("", {embed: {
 				color: 12893700,
