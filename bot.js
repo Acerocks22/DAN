@@ -529,6 +529,7 @@ bot.on('message', msg => {
 		var arg = args[1];
 		if (arg == undefined) {
 			msg.reply("Make sure you define a valid Battletag!");
+			return;
 		}
 		var tag = args[1].replace('#', '-');
 		//// Search for a player ( you must have the exact username, if not Blizzard api will return a not found status) 
