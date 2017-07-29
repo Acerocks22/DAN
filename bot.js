@@ -526,6 +526,10 @@ bot.on('message', msg => {
 	}
 	if(msg.content.startsWith(prefix + 'ow')) {
 		var args = msg.content.split(' ');
+		var arg = args[1];
+		if (arg == undefined) {
+			msg.reply("Make sure you define a valid Battletag!");
+		}
 		var tag = args[1].replace('#', '-');
 		//// Search for a player ( you must have the exact username, if not Blizzard api will return a not found status) 
 		owjs
@@ -534,10 +538,23 @@ bot.on('message', msg => {
 				var rank = data['profile'].rank;
 				var tier = data['profile'].tier;
 				var level = data['profile'].level;
-				var compElims = data['competitive']['global'].eliminations_average;
-				var compDeaths = data['competitive']['global'].deaths_average;
-				var compDamage = data['competitive']['global'].damage_done;
+				var compElims = data['competitive']['global'].eliminations;
+				var compDeaths = data['competitive']['global'].deaths;
+				var compDamage = data['competitive']['global'].all_damage_done;
 				var compKillstreak = data['competitive']['global'].kill_streak_best;
+				var compHealing = data['competitive']['global'].healing_done;
+				var compSolo = data['competitive']['global'].solo_kills;
+				var compWon = data['competitive']['global'].games_won;
+				var compLost = data['competitive']['global'].games_lost;
+				
+				var quickTotalMed = data['quickplay']['global'].medals;
+				var compTotalMed = data['competitive']['global'].medals;
+				var quickGoldMed = data['quickplay']['global'].medals_gold;
+				var compGoldMed = data['competitive']['global'].medals_gold;
+				var quickSilvMed = data['quickplay']['global'].medals_silver;
+				var compSilvMed = data['competitive']['global'].medals_silver;
+				var quickBronzMed = data['quickplay']['global'].medals_bronze;
+				var compBronzMed = data['competitive']['global'].medals_bronze;
 				
 				if (compElims == undefined) {
 					compElims = "N/A";
@@ -579,16 +596,16 @@ bot.on('message', msg => {
 						{
 						name: 'Quickplay Stats: ',
 						inline: true,
-						value: '**Elimination Average:** ' + data['quickplay']['global'].eliminations_average.toString() + '\n**Death Average:** ' + data['quickplay']['global'].deaths_average.toString() + '\n**Damage Done:** ' + data['quickplay']['global'].damage_done.toString() + '\n**Best Killstreak:** ' + data['quickplay']['global'].kill_streak_best.toString()
+						value: '**Games Won:** '+data['quickplay']['global'].games_won.toString()+'\n**Total Eliminations:** ' + data['quickplay']['global'].eliminations.toString() + '\n**Total Solo Kills:** '+data['quickplay']['global'].solo_kills.toString()+'\n**Total Deaths:** ' + data['quickplay']['global'].deaths.toString() + '\n**Damage Done:** ' + data['quickplay']['global'].all_damage_done.toString() + '\n**Best Killstreak:** ' + data['quickplay']['global'].kill_streak_best.toString() + '\n**Total Healing Done:** ' + data['quickplay']['global'].healing_done.toString()
 						},
 						{
 						name: 'Competitive Stats: ',
 						inline: true,
-						value: '**Elimination Average:** ' + compElims.toString() + '\n**Death Average:** ' + compDeaths.toString() + '\n**Damage Done:** ' + compDamage.toString() + '\n**Best Killstreak:** ' + compKillstreak.toString()
+						value: '**Games Won:** '+compWon+'\n**Games Lost:** '+compLost+'\n**Total Eliminations:** ' + compElims.toString() + '\n**Total Solo Kills:** '+compSolo.toString()+'\n**Total Deaths:** ' + compDeaths.toString() + '\n**Damage Done:** ' + compDamage.toString() + '\n**Best Killstreak:** ' + compKillstreak.toString() + '\n**Total Healing Done:** ' + compHealing
 						},
 						{
 						name: 'Medal Stats: ',
-						value: '**Total Medals:** ' + data['quickplay']['global'].medals.toString() + '\n**Gold Medals:** ' + data['quickplay']['global'].medals_gold.toString() + '\n**Silver Medals:** ' + data['quickplay']['global'].medals_silver.toString() + '\n**Bronze Medals:** ' + data['quickplay']['global'].medals_bronze.toString()
+						value: '**Total Medals:** ' + Number(quickTotalMed + compTotalMed).toString() + '\n**Gold Medals:** ' + Number(quickGoldMed + compGoldMed).toString() + '\n**Silver Medals:** ' + Number(quickSilvMed + compSilvMed).toString() + '\n**Bronze Medals:** ' + Number(quickBronzMed + compBronzMed).toString()
 						}
 					],
 					thumbnail: {
@@ -599,6 +616,7 @@ bot.on('message', msg => {
 			.catch(function(e) {
 				//if (e.toString().includes(''))
 				console.log(e);
+				msg.reply("That user does not exist.");
 			});
 	}
 	if (msg.content.startsWith(beta + "puzzle")) {
