@@ -3,6 +3,7 @@ const bot = new Discord.Client();
 const express = require('express');
 var app = express();
 var http = require('http');
+var request = require("request");
 app.server = http.createServer(app);
 var mzsi = require('mzsi');
 var owjs = require('overwatch-js');
@@ -2042,8 +2043,8 @@ bot.on('message', msg => {
 		} else {
 			target.send(msg.author.username+" wants to videochat with you! Join it at "+url);
 		}
-	}
-	if (msg.content.startsWith(prefix+"auction")) {
+	}/*
+	if (msg.content.startsWith(prefix+"store")) {
 		var items = [];
 		var selected;
 		var setNum;
@@ -2055,6 +2056,14 @@ bot.on('message', msg => {
 		var itemRarity;
 		var itemCollectible;
 		var itemSet;
+		
+		function Item(c_set, c_collectible, is_rare) {
+			this.c_set = c_set;
+			this.c_collectible = c_collectible;
+			this.is_rare = is_rare;
+		}
+		
+		var auctionItems = [];
 		for (var i = 0; i < 6; i++) {
 			setNum = randomInt(0, 4);
 			colNum = randomInt(0, 10);
@@ -2130,34 +2139,125 @@ bot.on('message', msg => {
 					itemRarity = "rare";
 					break;
 			}
-			console.log("Set: "+itemSet+", Collectible #: "+itemCollectible+", Rarity: "+itemRarity);
+			auctionItems.push(new Item(itemSet, itemCollectible, itemRarity));
 		}
-		msg.channel.send("The Auction has some new Collectibles for you today. ");
-	}
-	if (msg.content.startsWith(prefix+"inventory")) {
+		//console.log(auctionItems);
+		//msg.channel.send("The Auction has some new Collectibles for you today.\n```"+auctionmsg+"```");
+		drawScreen();
 		
+		function drawScreen() {
+			var Image = Canvas.Image;
+			var canvas = new Canvas(400, 270);
+			var ctx = canvas.getContext('2d');
+			var img = new Image();
+			var c1 = new Image();
+			var c2 = new Image();
+			var c3 = new Image();
+			var c4 = new Image();
+			var c5 = new Image();
+			var c6 = new Image();
+			
+			img.onload = function() {
+				ctx.drawImage(img, 0, 0, 400, 270);
+			}
+			img.onerror = function(err) {
+				console.log(err);
+			}
+			img.src = fs.readFileSync(path.join(__dirname, 'collectibles/onlinestore.png'));
+			
+			c1.onload = function() {
+				ctx.drawImage(c1, 36, 48, 65, 65);
+			}
+			c1.onerror = function(err) {
+				console.log(err);
+			}
+			c1.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[0].c_set+'/'+auctionItems[0].c_collectible+'_'+auctionItems[0].is_rare+'.png'));
+			
+			c2.onload = function() {
+				ctx.drawImage(c2, 166, 48, 65, 65);
+			}
+			c2.onerror = function(err) {
+				console.log(err);
+			}
+			c2.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[1].c_set+'/'+auctionItems[1].c_collectible+'_'+auctionItems[1].is_rare+'.png'));
+			
+			c3.onload = function() {
+				ctx.drawImage(c3, 300, 48, 65, 65);
+			}
+			c3.onerror = function(err) {
+				console.log(err);
+			}
+			c3.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[2].c_set+'/'+auctionItems[2].c_collectible+'_'+auctionItems[2].is_rare+'.png'));
+			
+			var screen = canvas.toBuffer();
+			
+			msg.channel.send("The Online Store has new Collectibles today!", {files: [{attachment: screen, name: "danScreen.png"}] });
+		}
+	}*/ /*
+	if (msg.content.startsWith(prefix+"inventory")) {
+		updateItem(userId, 2, 5, 1, 1, function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+		});
+	}*/
+	if (msg.content.startsWith("-kc")) {
+		var user = msg.content.split(" ")[1].toLowerCase();
+		if (user == undefined) {
+			msg.channel.send("Make sure you specify a KC username.");
+			return;
+		}
+		var found;
+		var cardCount = 0;
+		var url = "https://clay.io/api/mittens/v1/users?accessToken=eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJ1c2VySWQiOiJiODc1YzBlYi1iNjkxLTRhNTktYjM4MS0yZDJlZGQ0ZTQ2ODQiLCJzY29wZXMiOlsiKiJdLCJpYXQiOjE0OTE4NzUxNDEsImlzcyI6ImNsYXkiLCJzdWIiOiJiODc1YzBlYi1iNjkxLTRhNTktYjM4MS0yZDJlZGQ0ZTQ2ODQifQ.kwTlBS3u9d-pJwTyupd_XPs5VT6kZ1uhO1_8ibZ75hrIpI3096Iv2gIMukIgX4zPT5bmGoFK9PL4XjbPw2m6zw&clientVersion=1&username=";
+		
+		request({
+			url: url+user,
+			json: true
+		}, function (error, response, result) {
+			if (result.length == 0) {
+					msg.channel.send("That user can't be found.");
+					return;
+				}
+			if (!error && response.statusCode === 200) {
+				for(var i = 0; i < result.length; i++) {
+					if(result[i].username == user) {
+						found = result[i];
+					}
+				}
+				if (found.itemIds.length != 0) {
+					for(var i = 0; i < found.itemIds.length; i++) {
+						if (found.itemIds[i].count != 0) {
+							cardCount += found.itemIds[i].count;
+						}
+					}
+				} else {
+					cardCount = 0;
+				}
+				if (found['dailyData'].userId == undefined) {
+					msg.channel.send(`KC Data for ***${user}***:\n**Rank:** ${found.rank}\n**Gold:** ${found.gold}\n**Total Cards:** ${cardCount}\n**Total CP:** ${found.weeklyCp}`);
+				} else {
+					msg.channel.send(`KC Data for ***${user}***:\n**Rank:** ${found.rank}\n**Gold:** ${found.gold}\n**Total Cards:** ${cardCount}\n**Total CP:** ${found.weeklyCp}\n**Trade Link:** https://kittencards.clay.juegos/newTrade/to/${found['dailyData'].userId}`);
+				}
+			}
+		})
 	}
 });
 
 function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
-};
-
+}
 function makeId() {
 	var text = "";
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
 	for (var i = 0; i < 5; i++) {
 		text += possible.charAt(Math.floor(Math.random() * possible.length));
 	}
-	
 	return text;
 }
-
 function isEven(n) {
    return n % 2 == 0;
 }
-
 function isOdd(n) {
    return Math.abs(n % 2) == 1;
 }
@@ -2183,6 +2283,31 @@ app.server.listen(process.env.PORT || 4000);
 console.log('DANbot is listening on port ' + app.server.address().port + '!');
 
 //====DATABASE FUNCTIONS====//
+function updateItem(user, c_set, collectible, isRare, amount, cb) {
+	query(`SELECT user_id, c_set, set_collectible, is_rare FROM items WHERE user_id = '${user}' AND c_set = '${c_set}' AND set_collectible = '${collectible}' AND is_rare = '${isRare}'`, function(err, result) {
+        if (err) {
+            cb(err, null);
+        }
+        cb(null, result);
+        var hasSet = result.rows[1];
+        var hasCollectible = result.rows[1];
+        var isRare = result.rows[1];
+        if(hasSet != undefined && hasCollectible != undefined && isRare != undefined) {
+			query(`UPDATE items SET amount = '${amount}' WHERE user_id = '${user}' AND c_set = '${c_set}' AND set_collectible = '${collectible}' AND is_rare = '${isRare}'`, function(err, result) {
+				if (err)
+					cb(err, null);
+				cb(null, result);
+			});
+		} else if(hasSet == undefined && hasCollectible == undefined && isRare == undefined) {
+			query(`INSERT INTO items(user_id, c_set) VALUES ('${user}', '${c_set}', '${collectible}', '${isRare}', '${amount}')`, function(err, result) {
+				if (err)
+					cb(err, null);
+				cb(null, result);
+			});
+		}
+    });
+}
+
 function getTop(cb) {
     query(`SELECT money, user_id FROM bank ORDER BY money DESC LIMIT 25`, function(err, result) {
         if (err)
