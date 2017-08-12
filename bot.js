@@ -37,7 +37,7 @@ var rob = new Discord.Collection();
 var social = new Discord.Collection();
 var horseBets = new Discord.Collection();
 
-const prefix = "-";
+const prefix = "--";
 const beta = "beta ";
 const port = "8080";
 var post;
@@ -2235,14 +2235,18 @@ bot.on('message', msg => {
 					cardCount = 0;
 				}
 				if (found['dailyData'].userId == undefined) {
-					msg.channel.send(`KC Data for ***${user}***:\n**Rank:** ${found.rank}\n**Gold:** ${found.gold}\n**Total Cards:** ${cardCount}\n**Total CP:** ${found.weeklyCp}`);
+					msg.channel.send(`KC Data for ***${user}***:\n**Rank:** ${commas(found.rank)}\n**Gold:** ${commas(found.gold)}\n**Total Cards:** ${commas(cardCount)}\n**Total CP:** ${commas(found.weeklyCp)}`);
 				} else {
-					msg.channel.send(`KC Data for ***${user}***:\n**Rank:** ${found.rank}\n**Gold:** ${found.gold}\n**Total Cards:** ${cardCount}\n**Total CP:** ${found.weeklyCp}\n**Trade Link:** https://kittencards.clay.juegos/newTrade/to/${found['dailyData'].userId}`);
+					msg.channel.send(`KC Data for ***${user}***:\n**Rank:** ${commas(found.rank)}\n**Gold:** ${commas(found.gold)}\n**Total Cards:** ${commas(cardCount)}\n**Total CP:** ${commas(found.weeklyCp)}\n**Trade Link:** https://kittencards.clay.juegos/newTrade/to/${found['dailyData'].userId}`);
 				}
 			}
 		})
 	}
 });
+
+function commas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 function randomInt(low, high) {
     return Math.floor(Math.random() * (high - low) + low);
