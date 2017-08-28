@@ -1,0 +1,182 @@
+[
+	{
+		"setName": "Abstracts",
+		"setDetails": [
+			{
+				"c_num": 1,
+				"c_name": "Abala"
+			},
+			{
+				"c_num": 2,
+				"c_name": "Fredro"
+			},
+			{
+				"c_num": 3,
+				"c_name": "Geotumm"
+			},
+			{
+				"c_num": 4,
+				"c_name": "Persinoh"
+			},
+			{
+				"c_num": 5,
+				"c_name": "Prelly"
+			},
+			{
+				"c_num": 6,
+				"c_name": "Puribine"
+			},
+			{
+				"c_num": 7,
+				"c_name": "Rendemic"
+			},
+			{
+				"c_num": 8,
+				"c_name": "Solant"
+			},
+			{
+				"c_num": 9,
+				"c_name": "Sramroh"
+			},
+			{
+				"c_num": 10,
+				"c_name": "Tyrann"
+			}
+		]
+	},
+	{
+		"setName": "Emojis"
+		"setDetails": [
+			{
+				"c_num": 1,
+				"c_name": "Alien"
+			},
+			{
+				"c_num": 2,
+				"c_name": "Cool"
+			},
+			{
+				"c_num": 3,
+				"c_name": "Crying"
+			},
+			{
+				"c_num": 4,
+				"c_name": "Devil"
+			},
+			{
+				"c_num": 5,
+				"c_name": "Ghost"
+			},
+			{
+				"c_num": 6,
+				"c_name": "Grimace"
+			},
+			{
+				"c_num": 7,
+				"c_name": "Joy"
+			},
+			{
+				"c_num": 8,
+				"c_name": "Mad"
+			},
+			{
+				"c_num": 9,
+				"c_name": "Poop"
+			},
+			{
+				"c_num": 10,
+				"c_name": "Smile"
+			}
+		]
+	},
+	{
+		"setName": "Pixels"
+		"setDetails": [
+			{
+				"c_num": 1,
+				"c_name": "Mario"
+			},
+			{
+				"c_num": 2,
+				"c_name": "Egg"
+			},
+			{
+				"c_num": 3,
+				"c_name": "E.T."
+			},
+			{
+				"c_num": 4,
+				"c_name": "Bowser"
+			},
+			{
+				"c_num": 5,
+				"c_name": "Mushroom"
+			},
+			{
+				"c_num": 6,
+				"c_name": "Pac-man"
+			},
+			{
+				"c_num": 7,
+				"c_name": "Pokeball"
+			},
+			{
+				"c_num": 8,
+				"c_name": "QBert"
+			},
+			{
+				"c_num": 9,
+				"c_name": "Sonic"
+			},
+			{
+				"c_num": 10,
+				"c_name": "Space Invader"
+			}
+		]
+	},
+	{
+		"setName": "Wolves"
+		"setDetails": [
+			{
+				"c_num": 1,
+				"c_name": "Angel"
+			},
+			{
+				"c_num": 2,
+				"c_name": "Bloody"
+			},
+			{
+				"c_num": 3,
+				"c_name": "Fancy"
+			},
+			{
+				"c_num": 4,
+				"c_name": "Fluffy"
+			},
+			{
+				"c_num": 5,
+				"c_name": "Rainbow"
+			},
+			{
+				"c_num": 6,
+				"c_name": "Glitch"
+			},
+			{
+				"c_num": 7,
+				"c_name": "Neon"
+			},
+			{
+				"c_num": 8,
+				"c_name": "Night"
+			},
+			{
+				"c_num": 9,
+				"c_name": "Day"
+			},
+			{
+				"c_num": 10,
+				"c_name": "Tribal"
+			}
+		]
+	}
+]

@@ -44,6 +44,7 @@ var post;
 var user;
 var server;
 var message;
+//var itemData = require("./json/itemData.json");
 
 var streamList = [];
 
@@ -936,6 +937,16 @@ bot.on('message', msg => {
 				for (i in jobPays) {
 					jobPays[i] *= 3;
 				}
+			}
+			if (houseNum == 12) {
+				for (i in jobPays) {
+					jobPays[i] *= 3;
+				}
+			}
+			if (houseNum == 13) {
+				for (i in jobPays) {
+					jobPays[i] *= 3;
+				}
 			} else {
 				for (i in jobPays) {
 					jobPays[i] *= 1;
@@ -1231,10 +1242,26 @@ bot.on('message', msg => {
 			} else if (houseNum == 11) {
 				bx = 0;
 				by = 0;
-				bw = 0;
-				bh = 0;
+				bw = 205;
+				bh = 205;
 				bgSky = "black";
 				bgGround = "darkgrey";
+				bgCloud = "#333333";
+			} else if (houseNum == 12) {
+				bx = 40;
+				by = 0;
+				bw = 205;
+				bh = 205;
+				bgSky = "black";
+				bgGround = "darkgrey";
+				bgCloud = "#333333";
+			} else if (houseNum == 13) {
+				bx = 40;
+				by = 10;
+				bw = 205;
+				bh = 205;
+				bgSky = "black";
+				bgGround = "black";
 				bgCloud = "#333333";
 			}
 			drawHouse();
@@ -1291,10 +1318,6 @@ bot.on('message', msg => {
 				img.src = fs.readFileSync(path.join(__dirname, 'houses/h'+houseNum+'.png'));
 			}
 			
-			/*ctx.fillStyle = "white";
-			ctx.font = 'bold 25px Arial';
-			ctx.fillText("", 110, 35);*/
-			
 			var houseImg = canvas.toBuffer();
 			
 			msg.channel.send("**"+msg.author.username+ "'s** house:", {files: [{attachment: houseImg, name: "house.png"}] });
@@ -1303,7 +1326,7 @@ bot.on('message', msg => {
 	if(msg.content.startsWith(prefix + "buy")) {
 		var args = msg.content.split(" ");
 		var arg = args[1];
-		var price
+		var price;
 		
 		getHouse(userId, function(err, result) {
 			if (err) {
@@ -1574,6 +1597,52 @@ bot.on('message', msg => {
 					});
 				}
 			});
+		} else if (arg == 12) {
+			price = 85000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 85000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("I guess you really like space. Hopefully NASA won't notice that this one is gone from their collection, right? Deducted 85,000 Coins from your balance.");
+					subMoney(userId, 85000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 12, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
+		} else if (arg == 13) {
+			price = 110000;
+			getMoney(userId, function(err, result) {
+				if (err) {
+					console.log(err);
+				}
+				var money = result.rows[0].money;
+				if (money < 110000) {
+					msg.reply("Sorry! You don't have enough money to purchase this house.");
+				} else {
+					msg.reply("Just when I thought a regular house was enough for you. Don't worry about the race that you enslaved to conquer this thing, they're all dead. Deducted 110,000 Coins from your balance.");
+					subMoney(userId, 110000, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					setHouse(userId, 13, function(err, result) {
+						if (err) {
+							console.log(err);
+						}
+					});
+				}
+			});
 		} else {
 			msg.reply("Make sure you specify a valid house number.");
 			return;
@@ -1581,7 +1650,7 @@ bot.on('message', msg => {
 		}
 	}
 	if(msg.content.startsWith(prefix + "realestate")) {
-		msg.channel.send("```Purchasable Houses:\n[1] Cardboard Box: 3,000 Coins\n[2] Ghetto Hut: 6,000 Coins\n[3] Log Cabin: 8,000 Coins\n[4] Brick House: 12,000 Coins\n[5] Cottage: 15,000 Coins\n[6] Federal Colonial: 18,000 Coins\n[7] Neoclassical: 23,000 Coins\n[8] Art Deco: 30,000 Coins\n[9] Space Hut: 40,000 Coins\n[10] UFO: 50,000 Coins\n[11] Satellite: 65,000 Coins\n\nTo purchase a house do -buy <number>. Where <number> is the number of the house on this list. \n\nNOTE: All purchases are non-refundable.\nIf you buy a house and then buy another one to replace it, you will have to still pay full price. Even if you've bought it before.```");
+		msg.channel.send("```Purchasable Houses:\n[1] Cardboard Box: 3,000 Coins\n[2] Ghetto Hut: 6,000 Coins\n[3] Log Cabin: 8,000 Coins\n[4] Brick House: 12,000 Coins\n[5] Cottage: 15,000 Coins\n[6] Federal Colonial: 18,000 Coins\n[7] Neoclassical: 23,000 Coins\n[8] Art Deco: 30,000 Coins\n[9] Space Hut: 40,000 Coins\n[10] UFO: 50,000 Coins\n[11] Satellite: 65,000 Coins\n[12] Spaceship: 85,000 Coins\n[13] Planet: 110,000 Coins\n\nTo purchase a house do -buy <number>. Where <number> is the number of the house on this list. \n\nNOTE: All purchases are non-refundable.\nIf you buy a house and then buy another one to replace it, you will have to still pay full price. Even if you've bought it before.```");
 	}
 	if (msg.content.startsWith(prefix + "changelog")) {
 		var change = "Added -house, -buy, and -realestate commands. All three commands are still in BETA.";
@@ -1773,23 +1842,6 @@ bot.on('message', msg => {
 			return;
 		}
 	}
-		
-		/*if (!post) {
-			msg.channel.send("Send a valid message.");
-			return;
-		} else if (post.toLowerCase().includes("fag") || post.toLowerCase().includes("fuck you") || post.toLowerCase().includes("cunt") || post.toLowerCase().includes("kys") || post.toLowerCase().includes("kill yourself")) {
-			msg.channel.send("Be nice! You're talking on a public chat.");
-			return;
-		} 
-		
-		msg.channel.send("Sending a message to everyone...\n`" + post + "`").then((sent) => {setTimeout(() =>{sent.edit("Sent message:\n`" + post + "`")},3000)});
-		setTimeout(function() {
-			var postchannel;
-			var postchannel2;
-			var value;
-			
-			
-		}, 3000);*/
 	/*if (msg.content.startsWith(prefix + "rob")) {
 		var target = msg.mentions.users.first().id;
 		if (target == undefined) {
@@ -2043,8 +2095,10 @@ bot.on('message', msg => {
 		} else {
 			target.send(msg.author.username+" wants to videochat with you! Join it at "+url);
 		}
-	}/*
-	if (msg.content.startsWith(prefix+"store")) {
+	}
+	/*if (msg.content.startsWith(prefix+"store")) {
+		console.log(JSON.stringify(itemData[0].setName));
+		
 		var items = [];
 		var selected;
 		var setNum;
@@ -2166,15 +2220,19 @@ bot.on('message', msg => {
 			img.src = fs.readFileSync(path.join(__dirname, 'collectibles/onlinestore.png'));
 			
 			c1.onload = function() {
-				ctx.drawImage(c1, 36, 48, 65, 65);
+				ctx.drawImage(c1, 36, 48, 70, 70);
 			}
 			c1.onerror = function(err) {
 				console.log(err);
 			}
 			c1.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[0].c_set+'/'+auctionItems[0].c_collectible+'_'+auctionItems[0].is_rare+'.png'));
 			
+			ctx.fillStyle = "black";
+			ctx.textAlign = "center";
+			ctx.fillText("hi", 36, 55); 
+			
 			c2.onload = function() {
-				ctx.drawImage(c2, 166, 48, 65, 65);
+				ctx.drawImage(c2, 166, 48, 70, 70);
 			}
 			c2.onerror = function(err) {
 				console.log(err);
@@ -2182,18 +2240,43 @@ bot.on('message', msg => {
 			c2.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[1].c_set+'/'+auctionItems[1].c_collectible+'_'+auctionItems[1].is_rare+'.png'));
 			
 			c3.onload = function() {
-				ctx.drawImage(c3, 300, 48, 65, 65);
+				ctx.drawImage(c3, 300, 48, 70, 70);
 			}
 			c3.onerror = function(err) {
 				console.log(err);
 			}
 			c3.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[2].c_set+'/'+auctionItems[2].c_collectible+'_'+auctionItems[2].is_rare+'.png'));
 			
+			
+			c4.onload = function() {
+				ctx.drawImage(c4, 36, 160, 70, 70);
+			}
+			c4.onerror = function(err) {
+				console.log(err);
+			}
+			c4.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[3].c_set+'/'+auctionItems[0].c_collectible+'_'+auctionItems[0].is_rare+'.png'));
+			
+			c5.onload = function() {
+				ctx.drawImage(c5, 166, 160, 70, 70);
+			}
+			c5.onerror = function(err) {
+				console.log(err);
+			}
+			c5.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[4].c_set+'/'+auctionItems[1].c_collectible+'_'+auctionItems[1].is_rare+'.png'));
+			
+			c6.onload = function() {
+				ctx.drawImage(c6, 300, 160, 70, 70);
+			}
+			c6.onerror = function(err) {
+				console.log(err);
+			}
+			c6.src = fs.readFileSync(path.join(__dirname, 'collectibles/'+auctionItems[5].c_set+'/'+auctionItems[2].c_collectible+'_'+auctionItems[2].is_rare+'.png'));
+			
 			var screen = canvas.toBuffer();
 			
 			msg.channel.send("The Online Store has new Collectibles today!", {files: [{attachment: screen, name: "danScreen.png"}] });
 		}
-	}*/ /*
+	}
 	if (msg.content.startsWith(prefix+"inventory")) {
 		updateItem(userId, 2, 5, 1, 1, function(err, result) {
 			if (err) {
