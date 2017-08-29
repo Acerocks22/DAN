@@ -50,6 +50,7 @@ var streamList = [];
 
 var totalUserCount;
 totalUserCount = bot.users.size;
+var cmdCount = 0;
 
 /*var channel;
 var adjectives = [];
@@ -63,6 +64,18 @@ bot.on("ready", () => {
 });
 
 bot.on('message', msg => {
+	var botuser;
+	if (msg.content.startsWith(prefix)) {
+		botuser = msg.channel.permissionsFor(bot.user.id);
+		cmdCount += 1;
+		if (!botuser.has("SEND_MESSAGES") || !botuser.has("MANAGE_MESSAGES") || !botuser.has("READ_MESSAGES") || !botuser.has("ATTACH_FILES")) {
+			return;
+		}
+	}
+	
+	if (msg.content.startsWith(prefix + "cmdcount")) {
+		msg.channel.send("**Commands sent since last restart: **"+cmdCount);
+	}
 	if (msg.author.bot) return;
 	
 	userId = msg.author.id;
