@@ -16,6 +16,7 @@
     "body-parser": "^1.17.2",
     "canvas": "^1.6.5",
     "casual": "^1.5.12",
+    "cleverbot.io": "^1.0.4",
     "discord.js": "^11.1.0",
     "express": "^4.15.3",
     "figlet": "^1.2.0",
