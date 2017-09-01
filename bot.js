@@ -17,9 +17,6 @@ var fs = require('fs');
 var urban = require('urban');
 var YodaSpeak = require('yoda-speak');
 var yoda = new YodaSpeak("JoyWrItwf0msh4CsAQnOQvfQBjGSp1tXrrNjsnQ6u6NhddvO6T");
-var cleverbot = require("cleverbot.io"),
-cbot = new cleverbot('hTUIkdTXfPh80tbo','uchWble9ux0wzMOhRR2JGb5Hyafknyg1');
-cbot.setNick("DAN");
 const {PubgAPI, PubgAPIErrors} = require('pubg-api-redis');
 const api = new PubgAPI({
   apikey: '0ab2b8a9-599d-44b1-93bf-f5ef84680935'
@@ -66,20 +63,6 @@ bot.on("ready", () => {
     totalUserCount = bot.users.size;
 });
 
-cbot.create(function (err, session) {
-			cbot.ask("hello", function (err, response) {
-				console.log(session + ':', response);
-			});
-		});
-
-/*cbot.create(function(err, session) {
-	console.log(cbot);
-	chat = function(line, callback) {
-		cbot.ask(line, function(err, response) {
-			callback(response);
-		});
-	};
-});*/
 
 bot.on('message', msg => {
 	var botuser;
@@ -93,13 +76,6 @@ bot.on('message', msg => {
 	
 	if (msg.content.startsWith(prefix + "cmdcount")) {
 		msg.channel.send("**Commands sent since last restart: **"+cmdCount);
-	}
-	if (msg.content.startsWith(prefix + "talk")) {
-		var args = msg.content.split(" ");
-		var arg = args[0] + " ";
-		var text = msg.content.slice(arg.length);
-		
-		
 	}
 	
 	if (msg.author.bot) return;
