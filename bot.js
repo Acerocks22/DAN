@@ -63,19 +63,25 @@ bot.on("ready", () => {
     totalUserCount = bot.users.size;
 });
 
-
 bot.on('message', msg => {
 	var botuser;
 	if (msg.content.startsWith(prefix)) {
 		botuser = msg.channel.permissionsFor(bot.user.id);
 		cmdCount += 1;
-		if (!botuser.has("SEND_MESSAGES") || !botuser.has("MANAGE_MESSAGES") || !botuser.has("READ_MESSAGES") || !botuser.has("ATTACH_FILES")) {
+		if (!botuser.has("SEND_MESSAGES") || !botuser.has("READ_MESSAGES")) {
 			return;
 		}
 	}
 	
 	if (msg.content.startsWith(prefix + "cmdcount")) {
 		msg.channel.send("**Commands sent since last restart: **"+cmdCount);
+	}
+	if (msg.content.startsWith(prefix + "talk")) {
+		var args = msg.content.split(" ");
+		var arg = args[0] + " ";
+		var text = msg.content.slice(arg.length);
+		
+		
 	}
 	
 	if (msg.author.bot) return;
@@ -326,7 +332,7 @@ bot.on('message', msg => {
 		var winner = randomInt(1,3);
 		var loser;
 		
-		if(target == undefined) {
+		if(target === undefined) {
 			msg.reply("Make sure you specify a target!");
 			return;
 		} else if(target.id == msg.author.id) {
@@ -418,8 +424,18 @@ bot.on('message', msg => {
 		var msgid = 12;
 		var move;
 		var champ;
+		var userAmount;
+		var jackpot = 0;
+		var horse;
+		var betMax = 500;
+		
+		var User = function(un, horsebet) {
+			this.username = un,
+			this.horse = horsebet
+		}
 		
 		var users = [];
+		var winners = [];
 
 		function replaceIndex(string, at, repl) {
 		   return string.replace(/\S/g, function(match, i) {
@@ -428,8 +444,67 @@ bot.on('message', msg => {
 				return match;
 			});
 		}
-
-		msg.channel.send("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4).then((sent) => {msgid = sent.id; moveHorses()});
+		
+		msg.channel.send("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4+"\nPlace your bets with -bet <horse name> <amount>.\nYou have 60 seconds to bet.").then((sent) => {msgid = sent.id});
+		
+		getMoney(userId, function(err, result) {
+			var userMoney = result.rows[0].money;
+			if (err) {
+				console.log(err);
+			}
+		
+		const collector = msg.channel.createMessageCollector(
+			m => m.content.startsWith(prefix + "bet"),
+				{ maxMatches: 10000, time: 60000 }
+			);
+			collector.on('collect', (msg, collected) => {
+				args = msg.content.split(" ");
+				horse = args[1].toLowerCase();
+				userAmount = args[2];
+				horseBets.forEach(function(bet, id, horseBets) {
+					if (msg.author.id === id) {
+						userAmount = 0;
+						msg.channel.send("You already bet money!");
+						return;
+					} else {
+						subMoney(id, bet.split('/')[1], function(err, result) {
+							if (err) {
+								console.log(err);
+							}
+						});
+					}
+				});
+				if (horse !== "carl" && horse !== "kevin" && horse !== "brad" && horse !== "jim") {
+					msg.channel.send("That horse isn't racing!");
+					return;
+				}
+				if (userAmount <= 0) {
+					msg.channel.send("Invalid amount!");
+					return;
+				} 
+				if (horse === undefined || userAmount === undefined) {
+					msg.channel.send("You're missing an argument!");
+					return;
+				}
+				if (userAmount > userMoney) {
+					msg.channel.send("You don't have enough money to bet that much.");
+					return;
+				}
+				if (userAmount > betMax) {
+					msg.channel.send("You can't bet above 500 Coins.");
+					return;
+				}
+				horseBets.set(msg.author.id, horse+"/"+userAmount);
+			});
+			collector.on('end', collected => {
+				moveHorses();
+				horseBets.forEach(function(bet, id, horseBets) {
+					users.push(new User(id, bet.split('/')[0]));
+					jackpot += Number(bet.split('/')[1]);
+				});
+				horseBets.clear();
+			});
+		});
 		
 		function moveHorses() {
 			move = setInterval(function() {
@@ -458,51 +533,66 @@ bot.on('message', msg => {
 					place4 -= 1;
 				}
 				
-				msg.channel.fetchMessage(msgid).then(message => {message.edit("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4+"\nPlace your bets with -bet <horse name>.");});
-				
-				const collector = msg.channel.createMessageCollector(
-					m => m.content.startsWith(prefix + "bet"),
-					{ maxMatches: 5000 }
-				);
-				collector.on('collect', (msg, collected) => {
-					args = msg.content.split(" ");
-					horse = args[1];
-					horseBets.set(msg.author.id, horse);
-					horseBets.set('sausage', 'sausage');
-				});
-				collector.on('end', collected => {
-					horseBets.forEach(function(bet, id, horseBets) {
-						users.push(msg.guild.members.get(id).username);
-							console.log(users);
-						if (bet) {
-						}
-					});
-					msg.channel.send("");
-					horseBets.clear();
-				});
+				msg.channel.fetchMessage(msgid).then(message => {message.edit("LET THE RACES BEGIN:\n" + lane1 + "\n" + lane2 + "\n" + lane3 + "\n" + lane4+"\nBets are closed.\nJackpot is "+jackpot+" Coins.");});
 				
 				if (place1 == 2) {
 					msg.channel.send(":tada: **Jim wins the race!** :tada:");
 					clearInterval(move);
-					champ = "Jim";
-					collector.stop();
+					champ = "jim";
+					endRace(champ);
 				} else if (place2 == 2) {
 					msg.channel.send(":tada: **Brad wins the race!** :tada:");
 					clearInterval(move);
-					champ = "Brad";
-					collector.stop();
+					champ = "brad";
+					endRace(champ);
 				} else if (place3 == 2) {
 					msg.channel.send(":tada: **Kevin wins the race!** :tada:");
 					clearInterval(move);
-					champ = "Kevin";
-					collector.stop();
+					champ = "kevin";
+					endRace(champ);
 				} else if (place4 == 2) {
 					msg.channel.send(":tada: **Carl wins the race!** :tada:");
 					clearInterval(move);
-					champ = "Carl";
-					collector.stop();
+					champ = "carl";
+					endRace(champ);
 				}
 			}, 1000);
+			
+			function endRace(champ) {
+				var winnerStr = "";
+				var yourGive;
+				for (var i = 0; i < users.length; i++) {
+					if (users[i].bet == champ) {
+						winners.push(users[i].username);
+					}
+				}
+				for (var i = 0; i < winners.length; i++) {
+					winnerStr += winners[i] +", ";
+				}
+				if (users.length == 1) {
+					var winnerEarns = jackpot;
+					msg.channel.send("Only one person voted so "+bot.users.get(users[0].username).username+", you keep your "+winnerEarns+" Coins.");
+					addMoney(winners[i], winnerEarns, function(err, result) {
+						console.log(result);
+						if (err) {
+							console.log(err);
+						}
+					});
+				} else if (users.length == 0) {
+					msg.channel.send("No one bet on a horse, so no one wins!");
+				} else {
+					var winnerEarns = jackpot / winners.length;
+					msg.channel.send("Congrats to "+winnerStr+"you win "+winnerEarns+" Coins!");
+					for (var i = 0; i < winners.length; i++) {
+						addMoney(winners[i], winnerEarns, function(err, result) {
+							console.log(result);
+							if (err) {
+								console.log(err);
+							}
+						});
+					}
+				}
+			}
 		}
 	}*/
 	if (msg.content.startsWith(prefix + "zodiac")) {
