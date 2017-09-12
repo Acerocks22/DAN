@@ -63,6 +63,10 @@ bot.on("ready", () => {
     totalUserCount = bot.users.size;
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> bf9d69d508029b5170f8d4d2ad1614eee7b4c7d2
 bot.on('message', msg => {
 	var botuser;
 	if (msg.content.startsWith(prefix)) {
@@ -75,13 +79,6 @@ bot.on('message', msg => {
 	
 	if (msg.content.startsWith(prefix + "cmdcount")) {
 		msg.channel.send("**Commands sent since last restart: **"+cmdCount);
-	}
-	if (msg.content.startsWith(prefix + "talk")) {
-		var args = msg.content.split(" ");
-		var arg = args[0] + " ";
-		var text = msg.content.slice(arg.length);
-		
-		
 	}
 	
 	if (msg.author.bot) return;
