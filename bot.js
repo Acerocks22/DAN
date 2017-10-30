@@ -14,6 +14,7 @@ var moment = require('moment');
 moment().format();
 var Canvas = require('canvas');
 var fs = require('fs');
+var util = require('util');
 var urban = require('urban');
 var YodaSpeak = require('yoda-speak');
 var yoda = new YodaSpeak("JoyWrItwf0msh4CsAQnOQvfQBjGSp1tXrrNjsnQ6u6NhddvO6T");
@@ -27,8 +28,11 @@ var path = require("path");
 var figlet = require('figlet');
 var WordPOS = require('wordpos'),
     wordpos = new WordPOS();
-    
+
+var markov = require('markov');
+var m = markov(1);
 var pos = require('pos');
+var jackpot = 0;
 
 //===COLLECTIONS===//
 var timeout = new Discord.Collection();
@@ -63,10 +67,8 @@ bot.on("ready", () => {
     totalUserCount = bot.users.size;
 });
 
-<<<<<<< HEAD
-=======
+function isValid(str) { return /^[0-9A-Za-z\s]+$/.test(str); }
 
->>>>>>> bf9d69d508029b5170f8d4d2ad1614eee7b4c7d2
 bot.on('message', msg => {
 	var botuser;
 	if (msg.content.startsWith(prefix)) {
@@ -76,6 +78,31 @@ bot.on('message', msg => {
 			return;
 		}
 	}
+	
+	/*if (!msg.content.startsWith(prefix) || isValid(msg.content) === true || msg.content.startsWith('-') == false) {
+		if (bot.user.id == msg.author.id) {
+			return;
+		}
+		if (msg.content.includes("]")) {
+			return;
+		} else if (msg.content.includes("@!")) {
+			return;
+		} else if (msg.content.includes("<")) {
+			return;
+		} else if (msg.content.includes(":")) {
+			return;
+		}
+		fs.appendFile('json/msg.txt', msg.content+'\n');
+	}
+	
+	if (msg.content.startsWith(prefix+"talk")) {
+		var s = fs.createReadStream(__dirname + '/json/msg.txt');
+		m.seed(s, function () {
+			//console.log(m.fill("is").join(' '));
+			var res = m.forward("the").join(' ');
+			msg.channel.send(res);
+		});
+	}*/
 	
 	if (msg.content.startsWith(prefix + "cmdcount")) {
 		msg.channel.send("**Commands sent since last restart: **"+cmdCount);
@@ -324,12 +351,19 @@ bot.on('message', msg => {
 		msg.channel.send(args[1] + " = **" + acronym(args[1]) + "**");
 	}
 	if (msg.content.startsWith(prefix + "duel")) {
+		var arg = msg.content.split(' ');
 		var target = msg.mentions.users.first();
-		var targetid = msg.mentions.users.first().id;
+		
+		if (target == undefined) {
+			msg.reply("Make sure you specify a target!");
+			return;
+		} else {
+			var targetid = msg.mentions.users.first().id;
+		}
 		var winner = randomInt(1,3);
 		var loser;
 		
-		if(target === undefined) {
+		if(arg[1] == undefined) {
 			msg.reply("Make sure you specify a target!");
 			return;
 		} else if(target.id == msg.author.id) {
@@ -404,8 +438,8 @@ bot.on('message', msg => {
 			}
 			msg.channel.send("```"+data+"```");
 		});
-	}/*
-	if (msg.content.startsWith(prefix + "horses")) {
+	}
+	/*if (msg.content.startsWith(prefix + "horses")) {
 		var lane1 = ': =========:horse_racing: : Jim';
 		var lane2 = ': =========:horse_racing: : Brad';
 		var lane3 = ': =========:horse_racing: : Kevin';
@@ -422,7 +456,7 @@ bot.on('message', msg => {
 		var move;
 		var champ;
 		var userAmount;
-		var jackpot = 0;
+		
 		var horse;
 		var betMax = 500;
 		
@@ -452,7 +486,7 @@ bot.on('message', msg => {
 		
 		const collector = msg.channel.createMessageCollector(
 			m => m.content.startsWith(prefix + "bet"),
-				{ maxMatches: 10000, time: 60000 }
+				{ maxMatches: 10000, time: 15000 }
 			);
 			collector.on('collect', (msg, collected) => {
 				args = msg.content.split(" ");
@@ -460,10 +494,12 @@ bot.on('message', msg => {
 				userAmount = args[2];
 				horseBets.forEach(function(bet, id, horseBets) {
 					if (msg.author.id === id) {
+						console.log("yes");
 						userAmount = 0;
 						msg.channel.send("You already bet money!");
 						return;
 					} else {
+						console.log("no");
 						subMoney(id, bet.split('/')[1], function(err, result) {
 							if (err) {
 								console.log(err);
@@ -564,21 +600,17 @@ bot.on('message', msg => {
 					}
 				}
 				for (var i = 0; i < winners.length; i++) {
-					winnerStr += winners[i] +", ";
+					winnerStr += bot.users.get(winners[i]).username +", ";
 				}
-				if (users.length == 1) {
-					var winnerEarns = jackpot;
-					msg.channel.send("Only one person voted so "+bot.users.get(users[0].username).username+", you keep your "+winnerEarns+" Coins.");
-					addMoney(winners[i], winnerEarns, function(err, result) {
-						console.log(result);
-						if (err) {
-							console.log(err);
-						}
-					});
-				} else if (users.length == 0) {
+				if (users.length == 0) {
 					msg.channel.send("No one bet on a horse, so no one wins!");
+					return;
+				} else if (winners.length == 0) {
+					msg.channel.send("No one won, so the jackpot has not been claimed yet.");
+					return;
 				} else {
-					var winnerEarns = jackpot / winners.length;
+					var winnerEarns = Number(jackpot) / Number(winners.length);
+					console.log(winnerEarns);
 					msg.channel.send("Congrats to "+winnerStr+"you win "+winnerEarns+" Coins!");
 					for (var i = 0; i < winners.length; i++) {
 						addMoney(winners[i], winnerEarns, function(err, result) {
@@ -588,6 +620,7 @@ bot.on('message', msg => {
 							}
 						});
 					}
+					jackpot = 0;
 				}
 			}
 		}
@@ -1758,15 +1791,6 @@ bot.on('message', msg => {
 		var change = "Added -house, -buy, and -realestate commands. All three commands are still in BETA.";
 		msg.channel.send("```Most recent DAN update: \n\n>" + change + "```");
 	}
-	/*if (msg.content.startsWith(prefix + "social")) {
-		var args = msg.content.split(" ");
-		if (args == undefined) {
-			msg.channel.send("You must define a command.");
-		}
-		if (args == "open") {
-			
-		}
-	}*/
 	if (msg.content.startsWith(prefix + "streamlist")) {
 		var list = "";
 		for(var i = 0; i < streamList.length; i++) {
@@ -2186,17 +2210,6 @@ bot.on('message', msg => {
 				msg.channel.send("That profile does not exist!");
 				console.log(reason);
 			});
-	}
-	if (msg.content.startsWith(prefix + "videocall")) {
-		var id = makeId();
-		url = `https://appear.in/${id}`;
-		var target = msg.mentions.users.first();
-		
-		if (target == undefined) {
-			msg.channel.send(msg.author.username+" has open a videochat at "+url);
-		} else {
-			target.send(msg.author.username+" wants to videochat with you! Join it at "+url);
-		}
 	}
 	/*if (msg.content.startsWith(prefix+"store")) {
 		console.log(JSON.stringify(itemData[0].setName));

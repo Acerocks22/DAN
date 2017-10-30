@@ -22,6 +22,7 @@
     "figlet": "^1.2.0",
     "fs": "0.0.1-security",
     "http": "0.0.0",
+    "markov": "0.0.7",
     "moment": "^2.18.1",
     "mzsi": "^1.2.0",
     "nodemon": "^1.11.0",
@@ -41,6 +42,7 @@
     "tf2": "^2.1.1",
     "urban": "^0.3.1",
     "url-to-screenshot": "^0.6.2",
+    "util": "^0.10.3",
     "wordpos": "^1.1.2",
     "yoda-speak": "^0.1.1"
   },
